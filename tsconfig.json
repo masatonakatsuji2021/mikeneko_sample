@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "lib": ["es6","dom"],
+    "outDir":"./",
+    "paths": {
+      "*": ["./*", "../node_modules/saiberian/bin/*"],
+      "app/*" : [ "./src/app/*" ]
+    }
+  },
+  "exclude": [
+    "./source/*",
+  ]
+}

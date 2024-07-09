@@ -43,19 +43,6 @@ const useExists = (name) => {
 };
 // @ts-ignore
 require = use;
-/*
-const uses = (names) => {
-    var buffers = {};
-    names.forEach((n) => {
-        var buff = use(n);
-        var name = n.split("/");
-        name = name[name.length - 1];
-        buffers[name] = buff;
-    });
-
-    return buffers;
-};
-*/
 let sfa = new FrontControl();
 sfa.setFn("App", ()=>{var exports = {};
 "use strict";

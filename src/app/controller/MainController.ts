@@ -1,5 +1,6 @@
 import { VDom } from "Dom";
 import { Controller } from "Controller";
+import { Special } from "app/Special";
 
 export class MainController extends Controller{
 
@@ -16,6 +17,7 @@ export class MainController extends Controller{
     }
 
     public index(){
+        console.log(Special.run());
         console.log("Main Controller Index ...OK");
     }
 

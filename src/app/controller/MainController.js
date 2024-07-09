@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MainController = void 0;
 const Dom_1 = require("Dom");
 const Controller_1 = require("Controller");
+const Special_1 = require("app/Special");
 class MainController extends Controller_1.Controller {
     constructor() {
         super(...arguments);
@@ -16,6 +17,7 @@ class MainController extends Controller_1.Controller {
         console.log("Main Controller After .... OK");
     }
     index() {
+        console.log(Special_1.Special.run());
         console.log("Main Controller Index ...OK");
     }
     page1() {

@@ -4,5 +4,5 @@ Saiberian.build({
         { type: "web" },
         { type: "android" }
     ],
-    codeCompress: true,
+    codeCompress: false,
 });

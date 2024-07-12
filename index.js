@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var saiberian_1 = require("saiberian");
+const saiberian_1 = require("saiberian");
 saiberian_1.Saiberian.build({
     platforms: [
         { type: "web" },

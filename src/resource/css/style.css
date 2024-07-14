@@ -2,3 +2,10 @@ body{
     background:rgb(41, 110, 101);
     color:#fff;
 }
+.bg-image {
+    width:200px;
+    height:200px;
+    background-size:180%;
+    background-position:center;
+    background-image:url("[short resource_dataurl url=image1.png]");
+}

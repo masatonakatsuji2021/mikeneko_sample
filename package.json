@@ -1,10 +1,15 @@
 {
     "saiberianBuild": {
-        "debug": true,
-        "codeCompress": false,
         "platforms": [
-            { "type": "web" },
-            { "type": "android" }
+            { 
+                "name": "web"
+            },
+            { 
+                "name": "android",
+                "debug": true,
+                "codeCompress": true,
+                "optionDir":"www"
+            }
         ]
     }
 }

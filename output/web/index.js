@@ -44,6 +44,7 @@ const useExists = (name) => {
 // @ts-ignore
 require = use;
 let sfa = new FrontControl();
+console.log=()=>{};
 sfa.setFn("App", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });

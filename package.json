@@ -6,6 +6,7 @@
             },
             { 
                 "name": "android",
+                "buildType": "cordova",
                 "debug": true,
                 "codeCompress": true,
                 "optionDir":"www"

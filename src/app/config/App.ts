@@ -11,4 +11,7 @@ export class MyApp extends App {
         "/view_test" : "viewTest",
     };
 
+    public static backgrounds: Array<string> = [
+        "Background",
+    ];
 }

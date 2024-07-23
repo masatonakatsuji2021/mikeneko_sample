@@ -13,3 +13,6 @@ MyApp.routes = {
     "/page4/{?id}": "c:main, a:page4",
     "/view_test": "viewTest",
 };
+MyApp.backgrounds = [
+    "Background",
+];

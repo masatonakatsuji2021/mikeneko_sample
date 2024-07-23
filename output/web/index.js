@@ -79,7 +79,8 @@ class Background {
                     const backgroundPath = "app/background/" + backgroundName;
                     if (!useExists(backgroundPath))
                         continue;
-                    const bg = use(backgroundPath);
+                    const background = use(backgroundPath);
+                    const bg = new background[backgroundName]();
                     yield bg.handle();
                 }
             }
@@ -2294,6 +2295,19 @@ class Special {
 exports.Special = Special;
 ;
 return exports;});
+sfa.setFn("app/background/Background", ()=>{var exports = {};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Background = void 0;
+const Background_1 = require("Background");
+class Background extends Background_1.Background {
+    handle() {
+        console.log("Background ....... ok");
+    }
+}
+exports.Background = Background;
+;
+return exports;});
 sfa.setFn("app/config/App", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -2310,6 +2324,9 @@ MyApp.routes = {
     "/page4/{?id}": "c:main, a:page4",
     "/view_test": "viewTest",
 };
+MyApp.backgrounds = [
+    "Background",
+];
 ;
 return exports;});
 sfa.setFn("app/controller/MainController", ()=>{var exports = {};

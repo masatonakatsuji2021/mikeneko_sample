@@ -1,6 +1,8 @@
-import { App, Routes } from "App";
+import { App, Routes, AppRouteType } from "App";
 
 export class MyApp extends App {
+
+    public static routeType : AppRouteType = AppRouteType.application;
     
     public static routes : Routes = {
         "/" : "c:main, a:index",

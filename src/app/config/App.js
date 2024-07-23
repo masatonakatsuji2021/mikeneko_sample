@@ -5,6 +5,7 @@ const App_1 = require("App");
 class MyApp extends App_1.App {
 }
 exports.MyApp = MyApp;
+MyApp.routeType = App_1.AppRouteType.application;
 MyApp.routes = {
     "/": "c:main, a:index",
     "/page1": "c:main, a:page1",

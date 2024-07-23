@@ -48,10 +48,21 @@ console.log=()=>{};
 sfa.setFn("App", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
+exports.App = exports.AppRouteType = void 0;
+var AppRouteType;
+(function (AppRouteType) {
+    AppRouteType["web"] = "web";
+    AppRouteType["application"] = "application";
+})(AppRouteType || (exports.AppRouteType = AppRouteType = {}));
 class App {
 }
 exports.App = App;
+/**
+ * ***routeType*** : Method for page transition.
+ * web = Change the browser URL and move to the page. You can go back by pressing the back button on the browser.
+ * application =
+ */
+App.routeType = AppRouteType.web;
 ;
 return exports;});
 sfa.setFn("Background", ()=>{var exports = {};
@@ -199,6 +210,29 @@ class Data {
     static set(name, value) {
         this.__data[name] = value;
         return this;
+    }
+    static push(name, value) {
+        if (!this.__data[name])
+            this.__data[name] = [];
+        this.__data[name].push(value);
+        return this;
+    }
+    static getLength(name) {
+        if (!this.__data[name])
+            return;
+        return this.__data[name].length;
+    }
+    static pop(name) {
+        if (!this.__data[name])
+            return this;
+        this.__data[name].pop();
+        return this;
+    }
+    static now(name) {
+        if (!this.__data[name])
+            return;
+        const length = this.__data[name].length;
+        return this.__data[name][length - 1];
     }
 }
 exports.Data = Data;
@@ -1293,12 +1327,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Response = void 0;
+const App_1 = require("App");
 const Routes_1 = require("Routes");
 const Util_1 = require("Util");
 const Data_1 = require("Data");
 const Dom_1 = require("Dom");
 const Shortcode_1 = require("Shortcode");
 class Response {
+    static back() {
+        const MyApp = require("app/config/App").MyApp;
+        if (MyApp.routeType == App_1.AppRouteType.application) {
+            console.log(Data_1.Data.get("history"));
+            if (Data_1.Data.getLength("history") == 1)
+                return;
+            Data_1.Data.pop("history");
+            const backUrl = Data_1.Data.now("history");
+            const route = Routes_1.Routes.searchRoute(backUrl);
+            Response.rendering(route).then(() => {
+                Data_1.Data.set("stepMode", false);
+            });
+        }
+        else if (MyApp.routeType == App_1.AppRouteType.web) {
+            history.back();
+        }
+    }
     static rendering(route) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -1757,6 +1809,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.string = exports.Startor = void 0;
+const App_1 = require("App");
 const Routes_1 = require("Routes");
 const Util_1 = require("Util");
 const Data_1 = require("Data");
@@ -1765,31 +1818,60 @@ const Response_1 = require("Response");
 const Shortcode_1 = require("Shortcode");
 class Startor {
     constructor() {
+        const MyApp = require("app/config/App");
+        if (!MyApp) {
+            throw Error("App Class is not found.");
+        }
+        if (!MyApp.MyApp) {
+            throw Error("App Class is not found.");
+        }
+        this.MyApp = MyApp.MyApp;
         this.setShortcode();
         (() => __awaiter(this, void 0, void 0, function* () {
             window.addEventListener("click", (e) => {
-                this.cliekHandleDelegate(e);
+                return this.cliekHandleDelegate(e);
             });
             window.addEventListener("popstate", (e) => __awaiter(this, void 0, void 0, function* () {
                 yield this.popStateHandleDelegate(e);
             }));
+            if (this.MyApp.routeType == App_1.AppRouteType.application)
+                Data_1.Data.push("history", "/");
             yield Background_1.Background.load();
             var route = Routes_1.Routes.searchRoute();
             Response_1.Response.rendering(route);
         }))();
     }
     cliekHandleDelegate(e) {
-        const target = e.target;
         // @ts-ignore
-        if (target.localName !== "a")
-            return;
+        let target = e.target;
+        for (let n = 0; n < 10; n++) {
+            if (!target.tagName)
+                return;
+            if (target.tagName == "A")
+                break;
+            // @ts-ignore
+            target = target.parentNode;
+        }
         // @ts-ignore
-        const href = target.getAttribute("href");
+        let href = target.getAttribute("href");
         if (!href)
             return;
         if (href.indexOf("#") !== 0)
             return;
-        Data_1.Data.set("stepMode", true);
+        href = href.substring(1);
+        if (this.MyApp.routeType == "application") {
+            e.preventDefault();
+            Data_1.Data.push("history", href);
+            const route = Routes_1.Routes.searchRoute(href);
+            Response_1.Response.rendering(route).then(() => {
+                Data_1.Data.set("stepMode", false);
+            });
+            return false;
+        }
+        else {
+            Data_1.Data.set("stepMode", true);
+            return true;
+        }
     }
     popStateHandleDelegate(e) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -2300,9 +2382,16 @@ sfa.setFn("app/background/Background", ()=>{var exports = {};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Background = void 0;
 const Background_1 = require("Background");
+const Dom_1 = require("Dom");
+const Response_1 = require("Response");
 class Background extends Background_1.Background {
     handle() {
         console.log("Background ....... ok");
+        setTimeout(() => {
+            (0, Dom_1.Dom)(".backbtn").onClick = () => {
+                Response_1.Response.back();
+            };
+        }, 1000);
     }
 }
 exports.Background = Background;
@@ -2316,6 +2405,7 @@ const App_1 = require("App");
 class MyApp extends App_1.App {
 }
 exports.MyApp = MyApp;
+MyApp.routeType = App_1.AppRouteType.application;
 MyApp.routes = {
     "/": "c:main, a:index",
     "/page1": "c:main, a:page1",
@@ -2380,7 +2470,7 @@ class ViewTestView extends View_1.View {
 exports.ViewTestView = ViewTestView;
 ;
 return exports;});
-sfa.setFn("rendering/template/default.html", ()=>{ return "PGhlYWRlcj5IZWFkZXIuLi48L2hlYWRlcj4KPGNvbnRlbnQ+PC9jb250ZW50Pgo8Zm9vdGVyPkZvb3Rlci4uPC9mb290ZXI+";});
+sfa.setFn("rendering/template/default.html", ()=>{ return "PGhlYWRlcj5IZWFkZXIuLi48YSBjbGFzcz0iYmFja2J0biI+QmFjazwvYT48L2hlYWRlcj4KPGNvbnRlbnQ+PC9jb250ZW50Pgo8Zm9vdGVyPkZvb3Rlci4uPC9mb290ZXI+";});
 sfa.setFn("rendering/view/main/index.html", ()=>{ return "PGgxPkhhbGxvIFdvcmxkISE8L2gxPgo8cD7jgojjgYbjgZPjgZ0gU2FpYmVyaWFuIOOBruS4lueVjOOBuDwvcD4KCjxpbWcgc3R5bGU9IndpZHRoOjMwMHB4IiBzcmM9ImltYWdlMS5wbmciPgo8cD48YSBocmVmPSIjL3BhZ2UxIj5QYWdlMTwvYT48L3A+CjxwPjxhIGhyZWY9IiMvdmlld190ZXN0Ij52aWV3IHRlc3Q8L2E+PC9wPgo=";});
 sfa.setFn("rendering/view/main/page1.html", ()=>{ return "PGgyPlBhZ2UxPC9oMj4KCjxwPjxhIHJlZj0iYnV0dG9uMSI+Q2xpY2sgSGVyZSE8L2E+PC9wPgo8cD48YSBocmVmPSIjL3BhZ2UyLzIyMiI+UGFnZTI8L2E+PC9wPg==";});
 sfa.setFn("rendering/view/viewTest.html", ()=>{ return "PHA+VmlldyBUZXN0IFBhZ2UuLi4uLiBPSzwvcD4KCjxwPmJhY2tncm91bmQtaW1hZ2UoZGlyZWN0KTwvcD4KPGRpdiBzdHlsZT0id2lkdGg6MzAwcHg7aGVpZ2h0OjMwMHB4O2JhY2tncm91bmQtc2l6ZToyMDAlO2JhY2tncm91bmQtcG9zaXRpb246Y2VudGVyO2JhY2tncm91bmQtaW1hZ2U6dXJsKFtzaG9ydCByZXNvdXJjZV9kYXRhdXJsIHVybD1pbWFnZTEucG5nXSIpIj48L2Rpdj4KPHA+YmFja2dyb3VuZC1pbWFnZShzdHlsZXNoZWV0KTwvcD4KPGRpdiBjbGFzcz0iYmctaW1hZ2UiPjwvZGl2Pg==";});

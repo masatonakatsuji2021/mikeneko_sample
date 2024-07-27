@@ -1,6 +1,6 @@
-import { VDom } from "Dom";
 import { Controller } from "Controller";
 import { Special } from "app/Special";
+import { Response } from "Response";
 
 export class MainController extends Controller{
 
@@ -16,17 +16,22 @@ export class MainController extends Controller{
         console.log("Main Controller After .... OK");
     }
 
+    public handleRenderBefore(beginStatus?: boolean): void {
+        console.log(this.mjs);
+        this.mjs.backbtn.onClick = () => {
+            Response.back();
+        };
+    }
+
     public index(){
         console.log(Special.run());
         console.log("Main Controller Index ...OK");
     }
 
     public page1(){
-        const a = VDom("button1");
-
-        a.on("click", ()=>{
+        this.mjs.button1.onClick = () => {
             alert("Page1 Click ... OK");
-        });
+        };
     }
 
 }

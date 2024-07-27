@@ -901,7 +901,12 @@ class Response {
             let vw;
             if (useExists(viewPath)) {
                 const View_ = use(viewPath);
-                vw = new View_();
+                if (!View_[Util_1.Util.getModuleName(viewName)]) {
+                    console.error("[WARM] \"" + Util_1.Util.getModuleName(viewName) + "\"View Class not exists.");
+                }
+                else {
+                    vw = new View_[Util_1.Util.getModuleName(viewName)]();
+                }
             }
             let beginStatus = false;
             if (Data_1.Data.get("beforeControllerPath") != controllerPath) {
@@ -928,9 +933,7 @@ class Response {
             yield cont.handleAfter(beginStatus);
             if (vw)
                 yield vw.handleAfter(beginStatus);
-            console.log("rendring ready?");
             yield Response.__rendering(route, cont);
-            console.log("rendring?");
             yield cont.handleRenderBefore(beginStatus);
             if (vw)
                 yield vw.handleRenderBefore(beginStatus);
@@ -1991,6 +1994,19 @@ class ViewTestView extends View_1.View {
     }
 }
 exports.ViewTestView = ViewTestView;
+;
+return exports;});
+sfa.setFn("app/view/main/IndexView", ()=>{var exports = {};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.indexView = void 0;
+const View_1 = require("View");
+class indexView extends View_1.View {
+    handle() {
+        console.log("main index view .... ok!");
+    }
+}
+exports.indexView = indexView;
 ;
 return exports;});
 sfa.setFn("rendering/template/default.html", ()=>{ return "PGhlYWRlcj5IZWFkZXIuLi48YSB2PSJiYWNrYnRuIj5CYWNrPC9hPjwvaGVhZGVyPgo8Y29udGVudD48L2NvbnRlbnQ+Cjxmb290ZXI+Rm9vdGVyLi48L2Zvb3Rlcj4=";});

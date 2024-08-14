@@ -2,7 +2,8 @@
     "saiberianBuild": {
         "platforms": [
             { 
-                "name": "web"
+                "name": "web",
+                "debug": true
             },
             { 
                 "name": "android",

@@ -3,7 +3,8 @@
     "target": "es6",
     "module": "commonjs",
     "lib": ["es6","dom"],
-    "outDir":"./",
+    "rootDir": "./",
+    "outDir":"./dist",
     "paths": {
       "*": ["./*", "../node_modules/saiberian/bin/*"],
       "app/*" : [ "./src/app/*" ]

@@ -22,6 +22,9 @@ a {
     --button-color:rgb(230,230,230);
     --button-active-bg:rgb(100,150,255);
 }
+.text_left {
+    text-align:left;
+}
 .text_center {
     text-align:center;
 }
@@ -218,4 +221,27 @@ dialog dwindow h3 {
 
 button {
     width:100%;
+}
+
+input,
+select,
+textarea {
+    background: rgba(30, 30, 30);
+    line-height: 50px;
+    height: 50px;
+    width: 100%;
+    border: solid 1px rgb(170, 170, 170);
+    color: rgb(220,220,220);
+    padding: 0 10px;
+    font-size: 18px;
+    outline:none;
+}
+input:focus {
+    border:solid 1px rgb(100, 230, 250);
+}
+textarea {
+    line-height: 1.6rem;
+    padding: 10px;
+    height: 200px;
+    appearance: none;
 }

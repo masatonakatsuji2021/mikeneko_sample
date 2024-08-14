@@ -14,4 +14,5 @@ MyApp.routes = {
         "/": "page3/list",
         "/{id}": "page3/detail",
     },
+    "/page4": "page4",
 };

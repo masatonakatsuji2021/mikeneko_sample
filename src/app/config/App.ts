@@ -12,5 +12,6 @@ export class MyApp extends App {
             "/" : "page3/list",
             "/{id}" : "page3/detail",
         },
+        "/page4": "page4",
     };
 }

@@ -84,6 +84,7 @@ main article {
     line-height:1.5rem;
     background:var(--main-bg);
     color:var(--main-color);
+    overflow:scroll;
     z-index:1;
 }
 header + main article {
@@ -244,4 +245,64 @@ textarea {
     padding: 10px;
     height: 200px;
     appearance: none;
+}
+input[type=radio],
+input[type=checkbox]{
+    appearance:none;
+    width:auto;
+    vertical-align:middle;
+    display:inline-block;
+    width:22px;
+    height:22px;
+    background:rgb(60,60,60);
+    border:solid 2px rgb(120,120,120);
+    position:relative;
+    transition-duration:300ms;
+}
+input[type=radio]{
+    border-radius:50%;
+}
+input[type=checkbox]{
+    border-radius:5px;
+}
+input[type=radio]:checked {
+    background:rgb(20,20,20);
+    border:solid 2px rgb(50,200,30);
+}
+input[type=checkbox]:checked {
+    background:rgb(50,200,30);
+    border:solid 2px rgb(50,200,30);
+}
+input[type=radio]:after{
+    content:"";
+    display:block;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:rgb(50,200,30);
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translateX(-50%) translateY(-50%);
+    opacity:0;
+    transition-duration:300ms;
+}
+input[type=radio]:checked:after{
+    opacity:1;
+}
+input[type=checkbox]:after{
+    content:"\02713";
+    display:block;
+    color:white;
+    opacity:0;
+    transition-duration:300ms;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translateX(-50%) translateY(-50%);
+    font-size: 15px;
+    font-weight: bold;
+}
+input[type=checkbox]:checked:after{
+    opacity:1;
 }

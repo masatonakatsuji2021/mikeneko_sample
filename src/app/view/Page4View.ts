@@ -16,5 +16,15 @@ export class Page4View extends View {
                 value6: this.mjs.value6.value,
             });
         };
+
+        this.mjs.reset.onClick = () => {
+            this.mjs.value1.reset();
+            this.mjs.value2.reset();
+            this.mjs.value3.reset();
+            this.mjs.value4.reset();
+            this.mjs.value5.reset();
+            this.mjs.value6.reset();
+
+        };
     }
 }

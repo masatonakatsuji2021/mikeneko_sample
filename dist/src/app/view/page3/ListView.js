@@ -11,7 +11,7 @@ class ListView extends View_1.View {
     handle() {
         this.title = "Page3";
         this.backMode = true;
-        if (Response_1.Response.isNext())
+        if (Response_1.Response.isNext)
             ListView.buffers = [];
         ListView.buffers.forEach((data) => {
             this.addItem(data);

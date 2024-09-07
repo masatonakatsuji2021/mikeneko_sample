@@ -330,6 +330,12 @@ input[type=checkbox]:checked:after{
     opacity:1;
 }
 
+.error-message.active {
+    background:darkred;
+    color:white;
+    padding:5px 10px;
+    margin:5px 0;
+}
 
 
 .column2 {

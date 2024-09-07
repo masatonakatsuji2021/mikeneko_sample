@@ -6,5 +6,5 @@ const Routes_1 = require("app/config/Routes");
 class MyApp extends App_1.App {
 }
 exports.MyApp = MyApp;
-MyApp.routeType = App_1.AppRouteType.web;
+MyApp.routeType = App_1.AppRouteType.application;
 MyApp.routes = Routes_1.MyRoutes;

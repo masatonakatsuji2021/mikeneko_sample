@@ -6,7 +6,7 @@
     "rootDir": "./",
     "outDir":"./dist",
     "paths": {
-      "*": ["./*", "../node_modules/saiberian/bin/*"],
+      "*": ["./*", "../node_modules/mikeneko/bin/*"],
       "app/*" : [ "./src/app/*" ]
     }
   },

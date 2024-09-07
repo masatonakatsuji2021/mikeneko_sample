@@ -4,7 +4,7 @@ exports.HomeView = void 0;
 const View_1 = require("app/view/View");
 class HomeView extends View_1.View {
     handle() {
-        this.title = "Saiberian";
+        this.title = "Mikeneko";
         this.backMode = false;
     }
 }

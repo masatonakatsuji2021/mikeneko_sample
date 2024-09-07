@@ -14,12 +14,13 @@ class View extends View_1.View {
         this.mjs.headerTitle.text = title;
     }
     set backMode(status) {
+        /*
         if (status) {
-            this.mjs.headerBackBtn.style({ display: null });
+            this.mjs.headerBackBtn.style({display: null});
         }
         else {
-            this.mjs.headerBackBtn.style({ display: "none" });
-        }
+            this.mjs.headerBackBtn.style({display: "none"});
+        }*/
     }
     handleHeaderChanged() {
         this.mjs.headerBackBtn.onClick = () => {

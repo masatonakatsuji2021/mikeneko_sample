@@ -304,19 +304,46 @@ class ModernJS {
             if (!buffer.els.length)
                 delete this.buffers[name];
         }
-        this.virtualAttributes("v", (attrValue, el) => {
-            if (!this.buffers[attrValue])
-                this.buffers[attrValue] = new ModernJS();
-            this.buffers[attrValue].addEl(el);
+        this.virtualAttributes("v", (parent, attrValue, el) => {
+            if (parent) {
+                if (!parent.childs[attrValue])
+                    parent.childs[attrValue] = new ModernJS();
+                parent.childs[attrValue].addEl(el);
+            }
+            else {
+                if (!this.buffers[attrValue])
+                    this.buffers[attrValue] = new ModernJS();
+                this.buffers[attrValue].addEl(el);
+            }
         });
         return this.buffers;
     }
     static virtualAttributes(target, handler) {
         const qss = document.querySelectorAll("[" + target + "]");
         qss.forEach((el) => {
-            const attrValue = el.attributes[target].value;
+            let attrValue = el.attributes[target].value;
             el.removeAttribute(target);
-            handler(attrValue, el);
+            let parent;
+            const attrValues = attrValue.split(".");
+            if (attrValues.length > 1) {
+                attrValue = attrValues[attrValues.length - 1];
+                attrValues.forEach((a_, index) => {
+                    if (index == (attrValues.length - 1))
+                        return;
+                    if (index == 0) {
+                        if (!this.buffers[a_])
+                            this.buffers[a_] = new ModernJS();
+                        this.buffers[a_].addEl(el);
+                        parent = this.buffers[a_];
+                    }
+                    else {
+                        if (!parent.childs[a_])
+                            parent.childs[a_] = new ModernJS();
+                        parent = parent.childs[a_];
+                    }
+                });
+            }
+            handler(parent, attrValue, el);
         });
     }
     static create(text, tagName) {
@@ -589,6 +616,44 @@ class ModernJS {
         });
         return this;
     }
+    set src(value) {
+        this.attr("src", value);
+    }
+    get src() {
+        return this.attr("src");
+    }
+    set placeHolder(value) {
+        this.attr("placeholder", value);
+    }
+    get placeHolder() {
+        return this.attr("placeholder");
+    }
+    set href(value) {
+        this.attr("href", value);
+    }
+    get href() {
+        return this.attr("href");
+    }
+    set display(status) {
+        if (status) {
+            this.style({ display: null });
+        }
+        else {
+            this.style({ display: "none" });
+        }
+    }
+    set id(value) {
+        this.attr("id", value);
+    }
+    get id() {
+        return this.attr("id");
+    }
+    set name(value) {
+        this.attr("name", value);
+    }
+    get name() {
+        return this.attr("name");
+    }
     isClass(className) {
         return this.els[0].classList.contains(className);
     }
@@ -778,6 +843,16 @@ class ModernJS {
                 }
             });
         }
+    }
+    set checked(status) {
+        // @ts-ignore
+        const el = this.els[0];
+        el.checked = status;
+    }
+    get checked() {
+        // @ts-ignore
+        const el = this.els[0];
+        return el.checked;
     }
     reset() {
         if (this.tagName == "INPUT") {
@@ -1018,6 +1093,12 @@ class Response {
         if (this.routeType == App_1.AppRouteType.web)
             location.href = "#" + url;
     }
+    static addHistory(url) {
+        if (Response.lock)
+            return;
+        this.isBack = false;
+        Data_1.Data.push("history", url);
+    }
     static historyClear() {
         Data_1.Data.set("history", []);
     }
@@ -1027,6 +1108,9 @@ class Response {
     static replace(url, send) {
         this.pop();
         this.next(url, send);
+    }
+    static now() {
+        return Routes_1.Routes.getRoute().url;
     }
     static get isNext() {
         return !this.isBack;
@@ -2418,10 +2502,11 @@ class ValidateErrorResult {
     }
     bind(mjs, name, index) {
         if (name) {
-            const errorName = "error." + name;
-            if (!mjs[errorName])
+            if (!mjs.error)
                 return;
-            let target = mjs[errorName];
+            if (!mjs.error.childs[name])
+                return;
+            let target = mjs.error.childs[name];
             let result;
             if (index) {
                 if (target.index(index)) {
@@ -3068,6 +3153,9 @@ class HomeView extends View_1.View {
     handle() {
         this.title = "Mikeneko";
         this.backMode = false;
+        this.mjs.test.style({ color: "lightblue" });
+        this.mjs.test.childs.sub1.text = "Text Area Test....(sub1)";
+        this.mjs.test.childs.sub2.text = "Text Area Test....(sub2)";
     }
 }
 exports.HomeView = HomeView;
@@ -3199,13 +3287,12 @@ class View extends View_1.View {
         this.mjs.headerTitle.text = title;
     }
     set backMode(status) {
-        /*
         if (status) {
-            this.mjs.headerBackBtn.style({display: null});
+            this.mjs.headerBackBtn.style({ display: null });
         }
         else {
-            this.mjs.headerBackBtn.style({display: "none"});
-        }*/
+            this.mjs.headerBackBtn.style({ display: "none" });
+        }
     }
     handleHeaderChanged() {
         this.mjs.headerBackBtn.onClick = () => {
@@ -3282,7 +3369,7 @@ sfa.setFn("rendering/template/default.html", ()=>{ return "PGhlYWRlcj48L2hlYWRlc
 sfa.setFn("rendering/ui/head.html", ()=>{ return "PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xIj4KPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJjc3Mvc3R5bGUuY3NzIj4KPHRpdGxlPk1pa2VuZWtvPC90aXRsZT4=";});
 sfa.setFn("rendering/ui/header.html", ()=>{ return "PGRpdiBjbGFzcz0iYXV0byI+CiAgICA8ZGl2IGNsYXNzPSJhcnJvdyIgdj0iaGVhZGVyQmFja0J0biI+PC9kaXY+CjwvZGl2Pgo8aDEgdj0iaGVhZGVyVGl0bGUiPjwvaDE+CjxkaXY+CiAgICA8bGFiZWw+4peLPC9sYWJlbD4KPC9kaXY+";});
 sfa.setFn("rendering/ui/listItem.html", ()=>{ return "PGxpPgogICAgPGEgdi1jaGlsZD0ibGluayI+CiAgICAgICAgPGRpdiBzdHlsZT0id2lkdGg6NzAlIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibWwxMCIgdi1jaGlsZD0ibmFtZSI+PC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzcz0idGV4dF9yaWdodCIgc3R5bGU9IndpZHRoOjMwJSI+CiAgICAgICAgICAgIDxzcGFuIHYtY2hpbGQ9ImNvZGUiIGNsYXNzPSJpbmxpbmUtYmxvY2sgdmVydGljYWxfbWlkZGxlIj48L3NwYW4+CiAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJhcnJvdyByaWdodCBpbmxpbmUtYmxvY2sgdmVydGljYWxfbWlkZGxlIj48L3NwYW4+CiAgICAgICAgPC9kaXY+CiAgICA8L2E+CjwvbGk+ICA=";});
-sfa.setFn("rendering/view/home.html", ()=>{ return "PHRhYmxlPgogICAgPHRyPgogICAgICAgIDx0ZCBjbGFzcz0iIHZlcnRpY2FsX21pZGRsZSI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9Im0xMCI+CiAgICAgICAgICAgICAgICA8aDE+SGFsbG8gTWlrZW5la28hPC9oMT4KICAgICAgICAgICAgICAgIDxwPlRleHQgU2FtcGxlIFRleHQgU2FtcGxlIC4uLjwvcD4gICAgCiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8dWw+CiAgICAgICAgICAgICAgICA8bGk+CiAgICAgICAgICAgICAgICAgICAgPGEgdXJsPSIvcGFnZTEiPlBhZ2UxPC9hPgogICAgICAgICAgICAgICAgPC9saT4KICAgICAgICAgICAgICAgIDxsaT4KICAgICAgICAgICAgICAgICAgICA8YSB1cmw9Ii9wYWdlMiI+UGFnZTIgKERpYWxvZyk8L2E+CiAgICAgICAgICAgICAgICA8L2xpPgogICAgICAgICAgICAgICAgPGxpPgogICAgICAgICAgICAgICAgICAgIDxhIHVybD0iL3BhZ2UzIj5QYWdlMyAoTGlzdCk8L2E+CiAgICAgICAgICAgICAgICA8L2xpPgogICAgICAgICAgICAgICAgPGxpPgogICAgICAgICAgICAgICAgICAgIDxhIHVybD0iL3BhZ2U0Ij5QYWdlNCAoRm9ybSk8L2E+CiAgICAgICAgICAgICAgICA8L2xpPgogICAgICAgICAgICAgICAgPGxpPgogICAgICAgICAgICAgICAgICAgIDxhIHVybD0iL3BhZ2U1Ij5QYWdlNSAodmFsaWRhdGUpPC9hPgogICAgICAgICAgICAgICAgPC9saT4KICAgICAgICAgICAgPC91bD4KICAgICAgICA8L3RkPgogICAgPC90cj4KPC90YWJsZT4K";});
+sfa.setFn("rendering/view/home.html", ()=>{ return "PHRhYmxlPgogICAgPHRyPgogICAgICAgIDx0ZCBjbGFzcz0iIHZlcnRpY2FsX21pZGRsZSI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9Im0xMCI+CiAgICAgICAgICAgICAgICA8aDE+SGFsbG8gTWlrZW5la28hPC9oMT4KICAgICAgICAgICAgICAgIDxwPlRleHQgU2FtcGxlIFRleHQgU2FtcGxlIC4uLjwvcD4gICAgCiAgICAgICAgICAgICAgICA8ZGl2IHY9InRlc3Quc3ViMSI+PC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IHY9InRlc3Quc3ViMiI+PC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8dWw+CiAgICAgICAgICAgICAgICA8bGk+CiAgICAgICAgICAgICAgICAgICAgPGEgdXJsPSIvcGFnZTEiPlBhZ2UxPC9hPgogICAgICAgICAgICAgICAgPC9saT4KICAgICAgICAgICAgICAgIDxsaT4KICAgICAgICAgICAgICAgICAgICA8YSB1cmw9Ii9wYWdlMiI+UGFnZTIgKERpYWxvZyk8L2E+CiAgICAgICAgICAgICAgICA8L2xpPgogICAgICAgICAgICAgICAgPGxpPgogICAgICAgICAgICAgICAgICAgIDxhIHVybD0iL3BhZ2UzIj5QYWdlMyAoTGlzdCk8L2E+CiAgICAgICAgICAgICAgICA8L2xpPgogICAgICAgICAgICAgICAgPGxpPgogICAgICAgICAgICAgICAgICAgIDxhIHVybD0iL3BhZ2U0Ij5QYWdlNCAoRm9ybSk8L2E+CiAgICAgICAgICAgICAgICA8L2xpPgogICAgICAgICAgICAgICAgPGxpPgogICAgICAgICAgICAgICAgICAgIDxhIHVybD0iL3BhZ2U1Ij5QYWdlNSAodmFsaWRhdGUpPC9hPgogICAgICAgICAgICAgICAgPC9saT4KICAgICAgICAgICAgPC91bD4KICAgICAgICA8L3RkPgogICAgPC90cj4KPC90YWJsZT4K";});
 sfa.setFn("rendering/view/page1.html", ()=>{ return "Cjx0YWJsZT4KICAgIDx0cj4KICAgICAgICA8dGQ+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9Im0xMCI+CiAgICAgICAgICAgICAgICA8cD5QYWdlMSBUZXh0IFNhbXBsZSBUZXh0IDxicj4KICAgICAgICAgICAgICAgICAgICBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgVGV4dCBTYW1wbGUgLi4uPC9wPgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L3RkPgogICAgPC90cj4KICAgIDx0cj4KICAgICAgICA8dGQ+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9Im0xMCI+CiAgICAgICAgICAgICAgICA8YSBjbGFzcz0iYnRuIj5CdXR0b24xPC9hPgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L3RkPgogICAgPC90cj4KPC90YWJsZT4K";});
 sfa.setFn("rendering/view/page2.html", ()=>{ return "PHVsPgogICAgPGxpPgogICAgICAgIDxhIHY9ImRpYWxvZzEiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJwbDEwIj5kaWFsb2cxPC9kaXY+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9InJpZ2h0Ij4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImFycm93IHJpZ2h0Ij48L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9hPgogICAgPC9saT4KICAgIDxsaT4KICAgICAgICA8YSB2PSJkaWFsb2cyIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0icGwxMCI+ZGlhbG9nMjwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJyaWdodCI+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJhcnJvdyByaWdodCI+PC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvYT4KICAgIDwvbGk+CiAgICA8bGk+CiAgICAgICAgPGEgdj0iZGlhbG9nMmEiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJwbDEwIj5kaWFsb2cyICh0aXRsZSk8L2Rpdj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0icmlnaHQiPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iYXJyb3cgcmlnaHQiPjwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2E+CiAgICA8L2xpPgogICAgPGxpPgogICAgICAgIDxhIHY9ImRpYWxvZzMiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJwbDEwIj5kaWFsb2czIChsb2FkaW5nKTwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJyaWdodCI+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJhcnJvdyByaWdodCI+PC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvYT4KICAgIDwvbGk+CjwvdWw+";});
 sfa.setFn("rendering/view/page3/detail.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMz5JbmRleCA9IDxzcGFuIHY9ImluZGV4Ij48L3NwYW4+PC9oMz4KPC9kaXY+";});

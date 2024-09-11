@@ -6,6 +6,9 @@ class HomeView extends View_1.View {
     handle() {
         this.title = "Mikeneko";
         this.backMode = false;
+        this.mjs.test.style({ color: "lightblue" });
+        this.mjs.test.childs.sub1.text = "Text Area Test....(sub1)";
+        this.mjs.test.childs.sub2.text = "Text Area Test....(sub2)";
     }
 }
 exports.HomeView = HomeView;

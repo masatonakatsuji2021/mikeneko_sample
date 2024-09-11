@@ -16,13 +16,12 @@ export class View extends V_ {
     }
 
     public set backMode(status: boolean) {
-        /*
         if (status) {
             this.mjs.headerBackBtn.style({display: null});
         }
         else {
             this.mjs.headerBackBtn.style({display: "none"});
-        }*/
+        }
     }
 
     public handleHeaderChanged() {

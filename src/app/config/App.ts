@@ -3,7 +3,9 @@ import { MyRoutes } from "app/config/Routes";
 
 export class MyApp extends App {
 
-    public static routeType: AppRouteType = AppRouteType.web;
+    // routeType
+    public static routeType: AppRouteType = AppRouteType.application;
 
+    // routes
     public static routes: Routes = MyRoutes;
 }

@@ -2,29 +2,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.View = void 0;
 const View_1 = require("View");
-const Response_1 = require("Response");
+const HeaderUI_1 = require("app/ui/HeaderUI");
 class View extends View_1.View {
     constructor() {
         super(...arguments);
         this.template = "default";
-        this.head = "head";
         this.header = "header";
+        this.head = "head";
     }
+    /**
+     * ***title*** : Sets the header title text.
+     */
     set title(title) {
-        this.mjs.headerTitle.text = title;
+        HeaderUI_1.HeaderUI.setTitle = title;
     }
-    set backMode(status) {
-        if (status) {
-            this.mjs.headerBackBtn.style({ display: null });
-        }
-        else {
-            this.mjs.headerBackBtn.style({ display: "none" });
-        }
+    /**
+     * ***back*** : header Back button visibility flag.
+     */
+    set back(status) {
+        HeaderUI_1.HeaderUI.setBack = status;
     }
-    handleHeaderChanged() {
-        this.mjs.headerBackBtn.onClick = () => {
-            Response_1.Response.back();
-        };
+    handleRenderBefore() {
+        this.back = true;
     }
 }
 exports.View = View;

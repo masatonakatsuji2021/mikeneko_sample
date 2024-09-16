@@ -1,33 +1,46 @@
 import { Response } from "Response";
 import { View } from "app/view/View";
-import { Test1Dialog } from "app/dialog/Test1Dialog";
 
 export class Page2View extends View {
 
     public handle() {
         this.title = "Page2";
-        this.backMode = true;
 
-        this.mjs.dialog1.onClick = () => {
-            const dialog = Response.openDialogOrigin("<div class=\"m10\">Dialog1 OK....</div>");
+        this.mjs.description.text = "Description Text Text Text...";
+
+        // item (first)
+        const first = this.mjs.item.first;
+        first.text += "(First)";
+        first.style({ color: "pink" });
+
+        // item (last)
+        const last = this.mjs.item.last;
+        last.text += "(Last)";
+        last.style({ color : "lightgreen" });
+
+        // item (index = 2)
+        const id3 = this.mjs.item.index(2);
+        id3.text += "(target)";
+        id3.style({ color: "yellow" });
+
+        // button1
+        const button1 = this.mjs.button1;
+        button1.datas.alertMessage = "Alert Message Test Sample ....";
+        button1.onClick = (_, my) => {
             setTimeout(()=>{
-                dialog.close();
-            }, 4000);
+                alert(my.datas.alertMessage);
+            }, 200);
         };
 
-        this.mjs.dialog2.onClick = () => {
-            Test1Dialog.open("Dialog Message 1 .... ok");
+        // link 
+        this.mjs.link1.onClick = () => {
+            Response.next("/page2/1");
         };
-
-        this.mjs.dialog2a.onClick = () => {
-            Test1Dialog.open("Title Test", "Dialog Message 2 .... ok");
+        this.mjs.link2.onClick = () => {
+            Response.next("/page2/2");
         };
-
-        this.mjs.dialog3.onClick = () => {
-            const dialog = Response.openDialog("loading");
-            setTimeout(()=>{
-                dialog.close();
-            }, 4000);
+        this.mjs.link3.onClick = () => {
+            Response.next("/page2/3");
         };
     }
 }

@@ -1,11 +1,21 @@
 export const MyRoutes = {
-    "/": "home",
-    "/page1": "page1",
-    "/page2": "page2",
-    "/page3": {
-        "/" : "page3/list",
-        "/{id}" : "page3/detail",
+    "/": "home",                        // Home
+    "/page1": {
+        "/": "page1",
+        "/type1": "page1/type1",
     },
-    "/page4": "page4",
+    "/page2": {
+        "/": "page2",
+        "/{id}": "page2/detail",
+    },
+    "/page3": "page3",
+    "/page4": {
+        "/": "page4",
+        "/{id}": "page4/detail",
+    },
     "/page5": "page5",
+    "/page6": "page6",
+    "/page7": "page7",
+    "/page8": "page8",
+    "/page9": "page9",
 };

@@ -1,32 +1,30 @@
-import { View as V_ } from "View";
-import { Response } from "Response";
+import { View as _ } from "View";
+import { HeaderUI } from "app/ui/HeaderUI";
 
-import { Data } from "Data";
-
-export class View extends V_ {
+export class View extends _ {
 
     public template: string = "default";
 
-    public head: string = "head";
-
     public header: string = "header";
 
+    public head: string = "head";
+
+    /**
+     * ***title*** : Sets the header title text.
+     */
     public set title(title: string) {
-        this.mjs.headerTitle.text = title;
+        HeaderUI.setTitle = title;
+    }
+    
+    /**
+     * ***back*** : header Back button visibility flag.
+     */
+    public set back(status: boolean) {
+        HeaderUI.setBack = status;
+    }
+    
+    public handleRenderBefore() {
+        this.back = true;
     }
 
-    public set backMode(status: boolean) {
-        if (status) {
-            this.mjs.headerBackBtn.style({display: null});
-        }
-        else {
-            this.mjs.headerBackBtn.style({display: "none"});
-        }
-    }
-
-    public handleHeaderChanged() {
-        this.mjs.headerBackBtn.onClick = () => {
-            Response.back();
-        };
-    }
 }

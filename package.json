@@ -2,12 +2,11 @@
     "mikenekoBuild": {
         "platforms": [
             { 
-                "name": "web",
+                "name": "app",
                 "debug": true
             },
             { 
-                "name": "android",
-                "buildType": "cordova",
+                "name": "web",
                 "debug": true,
                 "codeCompress": true,
                 "optionDir":"www"

@@ -54,6 +54,7 @@ main article {
     top:0;
     width:100%;
     height:100%;
+    overflow:auto;
 }
 header ~ main article {
     top:50px;
@@ -201,4 +202,33 @@ ul.list li a {
     color:var(--main_color);
     display:block;
     padding:10px;
+}
+ul.list li a:active {
+    background:rgb(80,80,80);
+}
+
+input,
+textarea,
+select {
+    background:#333;
+    color:white;
+    height:50px;
+    line-height:50px;
+    padding:0 20px;
+    border:solid 1px #999;
+    width:100%;
+    font-size:18px;
+}
+input:focus-visible {
+    outline:solid 1px #29c;
+}
+
+.error-message{
+    line-height:20px;
+    min-height:20px;
+    color:#ff7733;
+    padding:5px 0;
+}
+img {
+    width:100%;
 }

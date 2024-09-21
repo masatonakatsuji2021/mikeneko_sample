@@ -1,5 +1,6 @@
 import { Response } from "Response";
 import { View } from "app/view/View";
+import { LoadingDialog } from "app/dialog/LoadingDialog";
 
 export class HomeView extends View {
 
@@ -25,6 +26,22 @@ export class HomeView extends View {
         this.mjs.page4.onClick = () => {
             // next to Page4.
             Response.next("/page4");
+        };
+
+        this.mjs.page5.onClick = () => {
+            // next to Page5.
+            Response.next("/page5");
+        };
+
+        this.mjs.page6.onClick = () => {
+            // next to Page5.
+            Response.lock = true;
+            const load = LoadingDialog.open("3s wait...");
+            setTimeout(()=>{
+                load.close();
+                Response.lock = false;
+                Response.next("/page6");
+            }, 3000);
         };
     }
 

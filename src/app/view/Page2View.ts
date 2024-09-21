@@ -1,6 +1,9 @@
 import { Response } from "Response";
 import { View } from "app/view/View";
 
+/**
+ * Page2 View Class
+ */
 export class Page2View extends View {
 
     public handle() {

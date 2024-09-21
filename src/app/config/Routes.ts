@@ -1,3 +1,6 @@
+/**
+ * Routing for each screen
+ */
 export const MyRoutes = {
     "/": "home",                        // Home
     "/page1": {

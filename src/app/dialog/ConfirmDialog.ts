@@ -1,6 +1,9 @@
 import { Dialog } from "Dialog";
 import { Response } from "Response";
 
+/**
+ * Confirm Dialog Class
+ */
 export class ConfirmDialog extends Dialog {
 
     /**

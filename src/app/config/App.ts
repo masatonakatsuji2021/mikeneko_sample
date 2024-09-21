@@ -1,6 +1,9 @@
 import { App, AppRouteType, Routes } from "App";
 import { MyRoutes } from "app/config/Routes";
 
+/**
+ * ***App Initial Setup***
+ */
 export class MyApp extends App {
 
     // routeType

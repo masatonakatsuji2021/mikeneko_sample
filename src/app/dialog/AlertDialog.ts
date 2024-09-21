@@ -1,6 +1,9 @@
 import { Dialog } from "Dialog";
 import { Response } from "Response";
 
+/**
+ * Alert Dialog Class
+ */
 export class AlertDialog extends Dialog {
 
     /**

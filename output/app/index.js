@@ -3773,6 +3773,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MyApp = void 0;
 const App_1 = require("App");
 const Routes_1 = require("app/config/Routes");
+/**
+ * ***App Initial Setup***
+ */
 class MyApp extends App_1.App {
 }
 exports.MyApp = MyApp;
@@ -3786,6 +3789,9 @@ sfa.setFn("app/config/Routes", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MyRoutes = void 0;
+/**
+ * Routing for each screen
+ */
 exports.MyRoutes = {
     "/": "home", // Home
     "/page1": {
@@ -3812,6 +3818,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlertDialog = void 0;
 const Dialog_1 = require("Dialog");
 const Response_1 = require("Response");
+/**
+ * Alert Dialog Class
+ */
 class AlertDialog extends Dialog_1.Dialog {
     static open(arg1, arg2, arg3, arg4) {
         let title;
@@ -3860,6 +3869,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfirmDialog = void 0;
 const Dialog_1 = require("Dialog");
 const Response_1 = require("Response");
+/**
+ * Confirm Dialog Class
+ */
 class ConfirmDialog extends Dialog_1.Dialog {
     /**
      * ***open** : Opens an confirm dialog.
@@ -3893,7 +3905,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoadingDialog = void 0;
 const Dialog_1 = require("Dialog");
 const Response_1 = require("Response");
+/**
+ * Loading Icon Dialog Class
+ */
 class LoadingDialog extends Dialog_1.Dialog {
+    /**
+     * ***open** : Opens an loading Icon dialog.
+     * @param message
+     * @returns
+     */
     static open(message) {
         const loadingDialog = Response_1.Response.openDialog("loading");
         loadingDialog.mjs.message.text = message;
@@ -3909,10 +3929,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HeaderUI = void 0;
 const Response_1 = require("Response");
 const UI_1 = require("UI");
+/**
+ * Header UI Class
+ */
 class HeaderUI extends UI_1.UI {
+    /**
+     * Set the header title
+     */
     static set setTitle(title) {
         this.title.text = title;
     }
+    /**
+     * Show/hide back button
+     */
     static set setBack(status) {
         if (status) {
             this.back.display = true;
@@ -3988,37 +4017,53 @@ exports.HomeView = void 0;
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
 const LoadingDialog_1 = require("app/dialog/LoadingDialog");
+/**
+ * Home View Class
+ * Display screen immediately after launching the app.
+ */
 class HomeView extends View_1.View {
     handle() {
         this.back = false;
         this.title = "Home";
+        // When the page1 button is pressed.
         this.mjs.page1.onClick = () => {
             // next to Page1.
             Response_1.Response.next("/page1");
         };
+        // When the page2 button is pressed.
         this.mjs.page2.onClick = () => {
             // next to Page2.
             Response_1.Response.next("/page2");
         };
+        // When the page3 button is pressed.
         this.mjs.page3.onClick = () => {
             // next to Page3.
             Response_1.Response.next("/page3");
         };
+        // When the page4 button is pressed.
         this.mjs.page4.onClick = () => {
             // next to Page4.
             Response_1.Response.next("/page4");
         };
+        // When the page5 button is pressed.
         this.mjs.page5.onClick = () => {
             // next to Page5.
             Response_1.Response.next("/page5");
         };
+        // When the page6 button is pressed.
         this.mjs.page6.onClick = () => {
             // next to Page5.
+            // Lock and stop screen transition function
             Response_1.Response.lock = true;
+            // Loading Dialog Open
             const load = LoadingDialog_1.LoadingDialog.open("3s wait...");
             setTimeout(() => {
+                // delay 3s...
+                // Loading Dialog Close.
                 load.close();
+                // Unlock screen transitions
                 Response_1.Response.lock = false;
+                // next to Page6..
                 Response_1.Response.next("/page6");
             }, 3000);
         };
@@ -4033,13 +4078,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page1View = void 0;
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
+/**
+ * Page1 View Class
+ */
 class Page1View extends View_1.View {
     handle() {
         this.title = "Page1";
+        // When you press the next button
         this.mjs.btn.childs.next.onClick = () => {
             // move to type1
             Response_1.Response.next("/page1/type1");
         };
+        // When you press the replace button
         this.mjs.btn.childs.replace.onClick = () => {
             // move to type1 (replace)
             Response_1.Response.replace("/page1/type1");
@@ -4055,6 +4105,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page2View = void 0;
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
+/**
+ * Page2 View Class
+ */
 class Page2View extends View_1.View {
     handle() {
         this.title = "Page2";

@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlertDialog = void 0;
 const Dialog_1 = require("Dialog");
 const Response_1 = require("Response");
+/**
+ * Alert Dialog Class
+ */
 class AlertDialog extends Dialog_1.Dialog {
     static open(arg1, arg2, arg3, arg4) {
         let title;

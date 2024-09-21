@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfirmDialog = void 0;
 const Dialog_1 = require("Dialog");
 const Response_1 = require("Response");
+/**
+ * Confirm Dialog Class
+ */
 class ConfirmDialog extends Dialog_1.Dialog {
     /**
      * ***open** : Opens an confirm dialog.

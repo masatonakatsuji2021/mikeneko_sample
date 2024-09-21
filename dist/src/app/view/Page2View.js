@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page2View = void 0;
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
+/**
+ * Page2 View Class
+ */
 class Page2View extends View_1.View {
     handle() {
         this.title = "Page2";

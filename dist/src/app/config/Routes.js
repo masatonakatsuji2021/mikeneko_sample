@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MyRoutes = void 0;
+/**
+ * Routing for each screen
+ */
 exports.MyRoutes = {
     "/": "home", // Home
     "/page1": {

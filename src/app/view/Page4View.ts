@@ -1,3 +1,4 @@
+import { UI } from "UI";
 import { Response } from "Response";
 import { View } from "app/view/View";
 
@@ -7,16 +8,28 @@ export class Page4View extends View {
         this.title = "Page4";
 
         Page4View.stub.forEach((s_) => {
-            const item = Response.appendUI(this.mjs.list, "page4item");
+            // loop stub lists
+
+            // append list item.
+            const item = UI.append(this.mjs.list, "page4item");
+
+            // set name
             item.mjs.name.text = s_.name;
+
+            // set code
             item.mjs.code.text = s_.code;
+
+            // link data set
             item.mjs.link.datas.id = s_.id;
+
+            // link button click eventhandle.
             item.mjs.link.onClick = (_, my) => {
                 Response.next("/page4/" + my.datas.id);
             };
         });
     }
 
+    // item list stub
     public static stub = [
         {
             id: 0,

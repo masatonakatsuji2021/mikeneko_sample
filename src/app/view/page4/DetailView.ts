@@ -13,9 +13,9 @@ export class DetailView extends View {
             item = s_;
         });
 
-        this.mjs.name.text = item.name;
-        this.mjs.code.text = item.code;
-        this.mjs.description.text = item.description;
+        this.vdos.name.text = item.name;
+        this.vdos.code.text = item.code;
+        this.vdos.description.text = item.description;
          
     }
 }

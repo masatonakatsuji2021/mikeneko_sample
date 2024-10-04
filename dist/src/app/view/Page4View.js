@@ -1,16 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page4View = void 0;
+const UI_1 = require("UI");
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
 class Page4View extends View_1.View {
     handle() {
         this.title = "Page4";
         Page4View.stub.forEach((s_) => {
-            const item = Response_1.Response.appendUI(this.mjs.list, "page4item");
+            // loop stub lists
+            // append list item.
+            const item = UI_1.UI.append(this.mjs.list, "page4item");
+            // set name
             item.mjs.name.text = s_.name;
+            // set code
             item.mjs.code.text = s_.code;
+            // link data set
             item.mjs.link.datas.id = s_.id;
+            // link button click eventhandle.
             item.mjs.link.onClick = (_, my) => {
                 Response_1.Response.next("/page4/" + my.datas.id);
             };
@@ -18,6 +25,7 @@ class Page4View extends View_1.View {
     }
 }
 exports.Page4View = Page4View;
+// item list stub
 Page4View.stub = [
     {
         id: 0,

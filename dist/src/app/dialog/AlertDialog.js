@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlertDialog = void 0;
 const Dialog_1 = require("Dialog");
-const Response_1 = require("Response");
 /**
  * Alert Dialog Class
  */
@@ -30,15 +29,15 @@ class AlertDialog extends Dialog_1.Dialog {
                 closeHandle = arg3;
             }
         }
-        const context = Response_1.Response.openDialog("alert");
-        context.mjs.title.display = false;
+        const context = this.show("alert");
+        context.vdos.title.display = false;
         if (title) {
-            context.mjs.title.display = true;
-            context.mjs.title.text = title;
+            context.vdos.title.display = true;
+            context.vdos.title.text = title;
         }
-        context.mjs.message.text = message;
-        context.mjs.close.text = closeText;
-        context.mjs.close.onClick = () => {
+        context.vdos.message.text = message;
+        context.vdos.close.text = closeText;
+        context.vdos.close.onClick = () => {
             if (closeHandle)
                 closeHandle();
             context.close();

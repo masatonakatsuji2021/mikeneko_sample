@@ -9,21 +9,21 @@ const View_1 = require("app/view/View");
 class Page2View extends View_1.View {
     handle() {
         this.title = "Page2";
-        this.mjs.description.text = "Description Text Text Text...";
+        this.vdos.description.text = "Description Text Text Text...";
         // item (first)
-        const first = this.mjs.item.first;
+        const first = this.vdos.item.first;
         first.text += "(First)";
         first.style({ color: "pink" });
         // item (last)
-        const last = this.mjs.item.last;
+        const last = this.vdos.item.last;
         last.text += "(Last)";
         last.style({ color: "lightgreen" });
         // item (index = 2)
-        const id3 = this.mjs.item.index(2);
+        const id3 = this.vdos.item.index(2);
         id3.text += "(target)";
         id3.style({ color: "yellow" });
         // button1
-        const button1 = this.mjs.button1;
+        const button1 = this.vdos.button1;
         button1.datas.alertMessage = "Alert Message Test Sample ....";
         button1.onClick = (_, my) => {
             setTimeout(() => {
@@ -31,13 +31,13 @@ class Page2View extends View_1.View {
             }, 200);
         };
         // link 
-        this.mjs.link1.onClick = () => {
+        this.vdos.link1.onClick = () => {
             Response_1.Response.next("/page2/1");
         };
-        this.mjs.link2.onClick = () => {
+        this.vdos.link2.onClick = () => {
             Response_1.Response.next("/page2/2");
         };
-        this.mjs.link3.onClick = () => {
+        this.vdos.link3.onClick = () => {
             Response_1.Response.next("/page2/3");
         };
     }

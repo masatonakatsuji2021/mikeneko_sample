@@ -25,9 +25,9 @@ class HeaderUI extends UI_1.UI {
         }
     }
     handle() {
-        HeaderUI.title = this.mjs.title;
-        HeaderUI.back = this.mjs.back;
-        this.mjs.back.onClick = () => {
+        HeaderUI.title = this.vdos.title;
+        HeaderUI.back = this.vdos.back;
+        this.vdos.back.onClick = () => {
             Response_1.Response.back();
         };
     }

@@ -7,17 +7,17 @@ export class Page5View extends View {
     public handle(){
         this.title = "Page5";
 
-        this.mjs.submit.onClick = () => {
+        this.vdos.submit.onClick = () => {
 
             const post = {
-                input1: this.mjs.input1.value,
-                input2: this.mjs.input2.value,
-                input3: this.mjs.input3.value,
-                input4: this.mjs.input4.value,
-                input5: this.mjs.input5.value,
+                input1: this.vdos.input1.value,
+                input2: this.vdos.input2.value,
+                input3: this.vdos.input3.value,
+                input4: this.vdos.input4.value,
+                input5: this.vdos.input5.value,
             };
 
-            const vres = Page5Validation.verifyBind(this.mjs, post);
+            const vres = Page5Validation.verifyBind(this.vdos, post);
 
             if (!vres.status) return;
 

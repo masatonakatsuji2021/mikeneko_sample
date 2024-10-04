@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConfirmDialog = void 0;
 const Dialog_1 = require("Dialog");
-const Response_1 = require("Response");
 /**
  * Confirm Dialog Class
  */
@@ -16,15 +15,15 @@ class ConfirmDialog extends Dialog_1.Dialog {
      * @param {() => void} closeHandle Close button click handle
      */
     static open(message, nextText, closeText, nextHandle, closeHandle) {
-        const context = Response_1.Response.openDialog("confirm");
-        context.mjs.message.text = message;
-        context.mjs.next.text = nextText;
-        context.mjs.next.onClick = () => {
+        const context = this.show("confirm");
+        context.vdos.message.text = message;
+        context.vdos.next.text = nextText;
+        context.vdos.next.onClick = () => {
             nextHandle();
             context.close();
         };
-        context.mjs.close.text = closeText;
-        context.mjs.close.onClick = () => {
+        context.vdos.close.text = closeText;
+        context.vdos.close.onClick = () => {
             closeHandle();
             context.close();
         };

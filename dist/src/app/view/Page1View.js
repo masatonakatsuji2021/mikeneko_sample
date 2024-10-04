@@ -10,12 +10,12 @@ class Page1View extends View_1.View {
     handle() {
         this.title = "Page1";
         // When you press the next button
-        this.mjs.btn.childs.next.onClick = () => {
+        this.vdos.btn.childs.next.onClick = () => {
             // move to type1
             Response_1.Response.next("/page1/type1");
         };
         // When you press the replace button
-        this.mjs.btn.childs.replace.onClick = () => {
+        this.vdos.btn.childs.replace.onClick = () => {
             // move to type1 (replace)
             Response_1.Response.replace("/page1/type1");
         };

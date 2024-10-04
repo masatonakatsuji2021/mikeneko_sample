@@ -1,5 +1,4 @@
 import { Dialog } from "Dialog";
-import { Response } from "Response";
 
 /**
  * Loading Icon Dialog Class
@@ -12,8 +11,8 @@ export class LoadingDialog extends Dialog {
      * @returns 
      */
     public static open(message: string) : LoadingDialog {
-        const loadingDialog = Response.openDialog("loading");
-        loadingDialog.mjs.message.text = message;
+        const loadingDialog = this.show("loading");
+        loadingDialog.vdos.message.text = message;
         return loadingDialog;
     }
 

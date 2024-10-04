@@ -1,5 +1,4 @@
 import { Dialog } from "Dialog";
-import { Response } from "Response";
 
 /**
  * Confirm Dialog Class
@@ -16,16 +15,16 @@ export class ConfirmDialog extends Dialog {
      */
     public static open(message: string, nextText: string, closeText: string, nextHandle: () => void,  closeHandle: () => void ) : void {
         
-        const context = Response.openDialog("confirm");
-        context.mjs.message.text = message;
-        context.mjs.next.text = nextText;
-        context.mjs.next.onClick = () => {
+        const context = this.show("confirm");
+        context.vdos.message.text = message;
+        context.vdos.next.text = nextText;
+        context.vdos.next.onClick = () => {
             nextHandle();
             context.close();
         };
 
-        context.mjs.close.text = closeText;
-        context.mjs.close.onClick = () => {
+        context.vdos.close.text = closeText;
+        context.vdos.close.onClick = () => {
             closeHandle();
             context.close();
         };

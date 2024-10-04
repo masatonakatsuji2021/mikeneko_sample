@@ -30,10 +30,10 @@ export class HeaderUI extends UI {
     }
     
     public handle() {
-        HeaderUI.title = this.mjs.title;
-        HeaderUI.back = this.mjs.back;
+        HeaderUI.title = this.vdos.title;
+        HeaderUI.back = this.vdos.back;
 
-        this.mjs.back.onClick = () => {
+        this.vdos.back.onClick = () => {
             Response.back();
         };
     }

@@ -13,37 +13,37 @@ export class HomeView extends View {
         this.title = "Home";
 
         // When the page1 button is pressed.
-        this.mjs.page1.onClick = () => {
+        this.vdos.page1.onClick = () => {
             // next to Page1.
             Response.next("/page1");
         };
 
         // When the page2 button is pressed.
-        this.mjs.page2.onClick = () => {
+        this.vdos.page2.onClick = () => {
             // next to Page2.
             Response.next("/page2");
         };
 
         // When the page3 button is pressed.
-        this.mjs.page3.onClick = () => {
+        this.vdos.page3.onClick = () => {
             // next to Page3.
             Response.next("/page3");
         };
 
         // When the page4 button is pressed.
-        this.mjs.page4.onClick = () => {
+        this.vdos.page4.onClick = () => {
             // next to Page4.
             Response.next("/page4");
         };
 
         // When the page5 button is pressed.
-        this.mjs.page5.onClick = () => {
+        this.vdos.page5.onClick = () => {
             // next to Page5.
             Response.next("/page5");
         };
 
         // When the page6 button is pressed.
-        this.mjs.page6.onClick = () => {
+        this.vdos.page6.onClick = () => {
             // next to Page5.
 
             // Lock and stop screen transition function
@@ -67,7 +67,7 @@ export class HomeView extends View {
         };
 
         // When the page7 button is pressed.
-        this.mjs.page7.onClick = () => {
+        this.vdos.page7.onClick = () => {
             // next to Page7.
             Response.next("/page7");
         };

@@ -1,4 +1,4 @@
-import { Response } from "Response";
+import { Dialog } from "Dialog";
 import { View } from "app/view/View";
 import { AlertDialog } from "app/dialog/AlertDialog";
 import { ConfirmDialog } from "app/dialog/ConfirmDialog";
@@ -9,15 +9,15 @@ export class Page3View extends View {
     public handle() {
         this.title = "Page3";
 
-        this.mjs.d1.onClick = () => {
+        this.vdos.d1.onClick = () => {
             // open dialog (test dialog)
-            const testDialog = Response.openDialog("test");
-            testDialog.mjs.close.onClick = () => {
+            const testDialog = Dialog.show("test");
+            testDialog.vdos.close.onClick = () => {
                 testDialog.close();
             };
         };
 
-        this.mjs.d2.onClick = () => {
+        this.vdos.d2.onClick = () => {
             // open alert dialog1
             AlertDialog.open(
                 "Dialog Title",
@@ -26,7 +26,7 @@ export class Page3View extends View {
             );
         };
 
-        this.mjs.d3.onClick = () => {
+        this.vdos.d3.onClick = () => {
             // open alert dialog2
             AlertDialog.open(
                 "alert dialog2 description text sample....",
@@ -37,7 +37,7 @@ export class Page3View extends View {
             );
         };
 
-        this.mjs.d4.onClick = () => {
+        this.vdos.d4.onClick = () => {
             // open confirm dialog
             ConfirmDialog.open(
                 "Confirm dialog description text sample....",
@@ -51,7 +51,7 @@ export class Page3View extends View {
         };
 
 
-        this.mjs.d5.onClick = () => {
+        this.vdos.d5.onClick = () => {
             // loading dialog...
             const ld = LoadingDialog.open("Loading Test...");
             setTimeout(()=>{

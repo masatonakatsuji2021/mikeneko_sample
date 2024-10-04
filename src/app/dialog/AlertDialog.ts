@@ -1,5 +1,4 @@
 import { Dialog } from "Dialog";
-import { Response } from "Response";
 
 /**
  * Alert Dialog Class
@@ -56,17 +55,17 @@ export class AlertDialog extends Dialog {
             }
         }
 
-        const context = Response.openDialog("alert");
-        context.mjs.title.display = false;
+        const context = this.show("alert");
+        context.vdos.title.display = false;
         if (title) {
-            context.mjs.title.display = true;
-            context.mjs.title.text = title;
+            context.vdos.title.display = true;
+            context.vdos.title.text = title;
         }
 
-        context.mjs.message.text = message;
+        context.vdos.message.text = message;
 
-        context.mjs.close.text = closeText;
-        context.mjs.close.onClick = () => {
+        context.vdos.close.text = closeText;
+        context.vdos.close.onClick = () => {
             if (closeHandle) closeHandle();
             context.close();
         };

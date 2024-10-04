@@ -1,5 +1,6 @@
 import { Response } from "Response";
 import { View } from "app/view/View";
+import { UI } from "UI";
 
 /**
  * Page1 View Class

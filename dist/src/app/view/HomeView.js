@@ -54,6 +54,11 @@ class HomeView extends View_1.View {
                 Response_1.Response.next("/page6");
             }, 3000);
         };
+        // When the page7 button is pressed.
+        this.mjs.page7.onClick = () => {
+            // next to Page7.
+            Response_1.Response.next("/page7");
+        };
     }
 }
 exports.HomeView = HomeView;

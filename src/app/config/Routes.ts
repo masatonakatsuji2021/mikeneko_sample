@@ -18,4 +18,5 @@ export const MyRoutes = {
     },
     "/page5": "page5",
     "/page6": "page6",
+    "/page7": "page7",
 };

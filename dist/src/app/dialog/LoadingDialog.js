@@ -13,8 +13,13 @@ class LoadingDialog extends Dialog_1.Dialog {
      */
     static open(message) {
         const loadingDialog = this.show("loading");
-        loadingDialog.vdos.message.text = message;
+        if (message)
+            loadingDialog.vdos.message.text = message;
         return loadingDialog;
+    }
+    /** set message  */
+    set message(message) {
+        this.vdos.message.text = message;
     }
 }
 exports.LoadingDialog = LoadingDialog;

@@ -10,10 +10,15 @@ export class LoadingDialog extends Dialog {
      * @param message 
      * @returns 
      */
-    public static open(message: string) : LoadingDialog {
-        const loadingDialog = this.show("loading");
-        loadingDialog.vdos.message.text = message;
+    public static open(message?: string) : LoadingDialog {
+        const loadingDialog = this.show("loading") as LoadingDialog;
+        if (message) loadingDialog.vdos.message.text = message;
         return loadingDialog;
+    }
+
+    /** set message  */
+    public set message(message: string) {
+        this.vdos.message.text = message;
     }
 
 }

@@ -1,3 +1,4 @@
+import { Lib } from "Lib";
 import { Response } from "Response";
 import { View } from "app/view/View";
 import { LoadingDialog } from "app/dialog/LoadingDialog";
@@ -43,27 +44,37 @@ export class HomeView extends View {
         };
 
         // When the page6 button is pressed.
-        this.vdos.page6.onClick = () => {
-            // next to Page5.
+        this.vdos.page6.onClick = async () => {
 
             // Lock and stop screen transition function
             Response.lock = true;
 
             // Loading Dialog Open
-            const load = LoadingDialog.open("3s wait...");
+            const load : LoadingDialog = LoadingDialog.open();
+            
+            load.message = "wait(1/3)....";
 
-            setTimeout(()=>{
-                // delay 3s...
+            // 1s wait...
+            await Lib.sleep(1000);
 
-                // Loading Dialog Close.
-                load.close();
+            load.message = "wait(2/3)....";
 
-                // Unlock screen transitions
-                Response.lock = false;
+            // 1s wait...
+            await Lib.sleep(1000);
 
-                // next to Page6..
-                Response.next("/page6");
-            }, 3000);
+            load.message = "wait(3/3)....";
+
+            // 1s wait...
+            await Lib.sleep(1000);
+
+            // Loading Dialog Close.
+            load.close();
+
+            // Unlock screen transitions
+            Response.lock = false;
+
+            // next to Page6..
+            Response.next("/page6");
         };
 
         // When the page7 button is pressed.

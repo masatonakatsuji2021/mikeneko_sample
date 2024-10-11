@@ -16,7 +16,7 @@ export class HomeView extends View {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.
-            Response.next("/page1");
+            Response.next("/page1a");
         };
 
         // When the page2 button is pressed.

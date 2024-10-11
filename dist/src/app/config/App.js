@@ -13,3 +13,4 @@ exports.MyApp = MyApp;
 MyApp.routeType = App_1.AppRouteType.application;
 // routes
 MyApp.routes = Routes_1.MyRoutes;
+MyApp.notFoundView = "notFound";

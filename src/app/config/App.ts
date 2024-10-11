@@ -11,4 +11,6 @@ export class MyApp extends App {
 
     // routes
     public static routes: Routes = MyRoutes;
+
+    public static notFoundView: string = "notFound";
 }

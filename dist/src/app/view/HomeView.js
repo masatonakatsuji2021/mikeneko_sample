@@ -25,7 +25,7 @@ class HomeView extends View_1.View {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.
-            Response_1.Response.next("/page1");
+            Response_1.Response.next("/page1a");
         };
         // When the page2 button is pressed.
         this.vdos.page2.onClick = () => {
@@ -49,7 +49,6 @@ class HomeView extends View_1.View {
         };
         // When the page6 button is pressed.
         this.vdos.page6.onClick = () => __awaiter(this, void 0, void 0, function* () {
-            // next to Page5.
             // Lock and stop screen transition function
             Response_1.Response.lock = true;
             // Loading Dialog Open

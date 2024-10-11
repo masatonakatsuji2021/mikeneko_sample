@@ -78,7 +78,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = exports.AppRouteType = void 0;
 var AppRouteType;
 (function (AppRouteType) {
+    /**
+     * ***web*** : This mode corresponds to screen transitions on the browser.
+     * You can use the back or forward buttons on your browser.
+     */
     AppRouteType["web"] = "web";
+    /**
+     * ***application*** : Modes for mobile and desktop apps.
+     */
     AppRouteType["application"] = "application";
 })(AppRouteType || (exports.AppRouteType = AppRouteType = {}));
 /**
@@ -299,10 +306,16 @@ class Dialog extends Render_1.Render {
      */
     handle(_sendData) { }
     /**
+     * ***handleClose*** : Handler executed when the dialog is closed.
+     * @returns {void}
+     */
+    handleClose() { }
+    /**
      * ***close*** : Method for closing the dialog.
      */
     close() {
         this.myMjs.removeClass("open");
+        this.handleClose();
         setTimeout(() => {
             this.myMjs.remove();
         }, 300);
@@ -1692,8 +1705,13 @@ class Response {
                     (0, ModernJS_1.dom)("main").removeClass(MyApp.animationOpenClassName);
                 if (MyApp.delay)
                     yield Lib_1.Lib.sleep(MyApp.delay);
-                if (route.mode == Routes_1.DecisionRouteMode.Notfound)
-                    throw ("Page Not found");
+                if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
+                    if (MyApp.notFoundView) {
+                        route.view = MyApp.notFoundView;
+                        yield Response.renderingOnView(route, send);
+                    }
+                    throw ("Page Not found. \"" + route.url + "\"");
+                }
                 if (route.controller) {
                     yield Response.renderingOnController(route, send);
                 }
@@ -3631,7 +3649,7 @@ class View extends Render_1.Render {
     }
     static bind(mjs, ViewName, sendData) {
         if (ViewName)
-            ViewName = "view/" + View;
+            ViewName = "view/" + ViewName;
         return super.bind(mjs, ViewName, sendData, this);
     }
     static append(mjs, ViewName, sendData) {
@@ -3752,6 +3770,7 @@ exports.MyApp = MyApp;
 MyApp.routeType = App_1.AppRouteType.application;
 // routes
 MyApp.routes = Routes_1.MyRoutes;
+MyApp.notFoundView = "notFound";
 ;
 return exports;});
 sfa.setFn("app/config/Routes", ()=>{var exports = {};
@@ -4067,7 +4086,7 @@ class HomeView extends View_1.View {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.
-            Response_1.Response.next("/page1");
+            Response_1.Response.next("/page1a");
         };
         // When the page2 button is pressed.
         this.vdos.page2.onClick = () => {
@@ -4091,7 +4110,6 @@ class HomeView extends View_1.View {
         };
         // When the page6 button is pressed.
         this.vdos.page6.onClick = () => __awaiter(this, void 0, void 0, function* () {
-            // next to Page5.
             // Lock and stop screen transition function
             Response_1.Response.lock = true;
             // Loading Dialog Open
@@ -4120,6 +4138,18 @@ class HomeView extends View_1.View {
     }
 }
 exports.HomeView = HomeView;
+;
+return exports;});
+sfa.setFn("app/view/NotFoundView", ()=>{var exports = {};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NotFoundView = void 0;
+const View_1 = require("app/view/View");
+class NotFoundView extends View_1.View {
+    handle() {
+    }
+}
+exports.NotFoundView = NotFoundView;
 ;
 return exports;});
 sfa.setFn("app/view/Page1View", ()=>{var exports = {};
@@ -4525,6 +4555,7 @@ sfa.setFn("rendering/ui/page7/item2.html", ()=>{ return "PGRpdiBzdHlsZT0iYm9yZGV
 sfa.setFn("rendering/ui/page7/item3.html", ()=>{ return "PGRpdiBzdHlsZT0iYmFja2dyb3VuZDpkYXJrZ3JlZW47Ym9yZGVyOnNvbGlkIDJweCBncmVlbjtwYWRkaW5nOjEwcHggMjBweDttYXJnaW4tYm90dG9tOjEwcHg7Ij4KICAgIDxkaXYgdj0ibWVzc2FnZSI+PC9kaXY+CjwvZGl2Pg==";});
 sfa.setFn("rendering/ui/page7/item4.html", ()=>{ return "PGRpdiBzdHlsZT0iYmFja2dyb3VuZDpyZ2IoMTkwLCA3MCwgNDApOyBib3JkZXI6c29saWQgMnB4IG9yYW5nZTtwYWRkaW5nOjEwcHggMjBweDttYXJnaW4tYm90dG9tOjEwcHg7Ij4KICAgIDxkaXYgdj0ibWVzc2FnZSI+PC9kaXY+CjwvZGl2Pg==";});
 sfa.setFn("rendering/view/home.html", ()=>{ return "PHRhYmxlIGNsYXNzPSJ3aW5kb3ciPgogICAgPHRyIGNsYXNzPSJtaWRkbGUiPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibTIwIj4KICAgICAgICAgICAgICAgIDxwPkFwcGxpY2F0aW9uIFRlc3QgU2FtcGxlLi4uPC9wPgogICAgICAgICAgICAgICAgPHA+PGEgY2xhc3M9ImJ0biIgdj0icGFnZTEiPk5leHQgUGFnZTE8L2E+PC9wPgogICAgICAgICAgICAgICAgPHA+PGEgY2xhc3M9ImJ0biIgdj0icGFnZTIiPk5leHQgUGFnZTIgKE1vZGVybkpTKTwvYT48L3A+CiAgICAgICAgICAgICAgICA8cD48YSBjbGFzcz0iYnRuIiB2PSJwYWdlMyI+TmV4dCBQYWdlMyAoRGlhbG9nKTwvYT48L3A+CiAgICAgICAgICAgICAgICA8cD48YSBjbGFzcz0iYnRuIiB2PSJwYWdlNCI+TmV4dCBQYWdlNCAoTGlzdCk8L2E+PC9wPgogICAgICAgICAgICAgICAgPHA+PGEgY2xhc3M9ImJ0biIgdj0icGFnZTUiPk5leHQgUGFnZTUgKFZhbGlkYXRpb24pPC9hPjwvcD4KICAgICAgICAgICAgICAgIDxwPjxhIGNsYXNzPSJidG4iIHY9InBhZ2U2Ij4zcyBMb2FkLi4uLiA9PiBQYWdlNjwvYT48L3A+CiAgICAgICAgICAgICAgICA8cD48YSBjbGFzcz0iYnRuIiB2PSJwYWdlNyI+TmV4dCBQYWdlNyAoVUkgYmluZC9hcHBlbmQpPC9hPjwvcD4KICAgICAgICAgICAgPC9kaXY+ICAgICAgICAgICAgCiAgICAgICAgPC90ZD4KICAgIDwvdHI+CjwvdGFibGU+Cg==";});
+sfa.setFn("rendering/view/notFound.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMj5Ob3QgRm91bmQuPC9oMj4KCjwvZGl2Pg==";});
 sfa.setFn("rendering/view/page1/type1.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMj5UeXBlMSAuLi4uIE9LPC9oMj4KICAgIDxoNCB2PSJkYXRldGltZSI+PC9oND4KPC9kaXY+";});
 sfa.setFn("rendering/view/page1.html", ()=>{ return "PHRhYmxlIGNsYXNzPSJ3aW5kb3ciPgogICAgPHRyPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibTEwIj4KICAgICAgICAgICAgICAgIDxwPlBhZ2UxIFRleHQgU2FtcGxlLi4uPC9wPgogICAgICAgICAgICAgICAgPGRpdiB2PSJpdGVtMSI+PC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IHY9Iml0ZW0yIj48L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC90ZD4KICAgIDwvdHI+CiAgICA8dHIgY2xhc3M9ImJvdHRvbSI+CiAgICAgICAgPHRkPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJtMTAiPgogICAgICAgICAgICAgICAgPGEgY2xhc3M9ImJ0biIgdj0iYnRuLm5leHQiPk5leHQgVHlwZTEuLi48L2E+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJtMTAiPgogICAgICAgICAgICAgICAgPGEgY2xhc3M9ImJ0biIgdj0iYnRuLnJlcGxhY2UiPlJlcGxhY2UgVHlwZTIuLi48L2E+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvdGQ+CiAgICA8L3RyPgo8L3RhYmxlPgo=";});
 sfa.setFn("rendering/view/page2/detail.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxwPlRleHQgU2FtcGxlIFRleHQgU2FtcGxlIC4uLi4uLi48L3A+CjwvZGl2Pg==";});

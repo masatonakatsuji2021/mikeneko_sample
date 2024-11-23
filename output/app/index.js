@@ -56,6 +56,15 @@ require = use;
 let sfa = new FrontControl();
 sfa.setFn("Ajax", ()=>{var exports = {};
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Ajax = exports.AjaxMethod = void 0;
 var AjaxMethod;
@@ -66,7 +75,40 @@ var AjaxMethod;
     AjaxMethod["DELETE"] = "DELETE";
 })(AjaxMethod || (exports.AjaxMethod = AjaxMethod = {}));
 class Ajax {
+    /**
+     * ***send***
+     * @param {AjaxOption} params Ajax Request Option
+     * @returns
+     */
     static send(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let req = new XMLHttpRequest();
+            if (params.headers) {
+                const c = Object.keys(params.headers);
+                for (let n = 0; n < c.length; n++) {
+                    const name = c[n];
+                    const value = params.headers[name];
+                    req.setRequestHeader(name, value.toString());
+                }
+            }
+            if (params.responseType)
+                req.responseType = params.responseType;
+            if (!params.async)
+                params.async = false;
+            return new Promise((resolve, reject) => {
+                req.onload = () => {
+                    const state = req.readyState;
+                    if (state == 200) {
+                        resolve(req.responseText);
+                    }
+                    else {
+                        reject(JSON.parse(req.response));
+                    }
+                };
+                req.open(params.method, params.url, params.async);
+                req.send(null);
+            });
+        });
     }
 }
 exports.Ajax = Ajax;
@@ -254,13 +296,41 @@ sfa.setFn("Data", ()=>{var exports = {};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Data = void 0;
 class Data {
+    /**
+     * get
+     * Get the value from the specified name
+     * @param {string} name
+     * @returns
+     */
     static get(name) {
         return this.__data[name];
     }
+    /**
+     * set
+     * Hold the value statically for the specified name
+     * @param {string} name
+     * @param {any} value
+     * @returns
+     */
     static set(name, value) {
         this.__data[name] = value;
         return this;
     }
+    /**
+     * remove
+     * Delete the value with the specified name
+     * @param {string} name
+     */
+    static remove(name) {
+        delete this.__data[name];
+    }
+    /**
+     * push
+     * Add and save a value in the specified name area
+     * @param {string} name
+     * @param {any} value
+     * @returns
+     */
     static push(name, value) {
         if (!this.__data[name])
             this.__data[name] = [];
@@ -294,6 +364,7 @@ sfa.setFn("Dialog", ()=>{var exports = {};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dialog = void 0;
 const Render_1 = require("Render");
+const Lib_1 = require("Lib");
 const ModernJS_1 = require("ModernJS");
 /**
  * ***Dialog*** : A class for displaying or manipulating a dialog screen.
@@ -319,6 +390,22 @@ class Dialog extends Render_1.Render {
         setTimeout(() => {
             this.myMjs.remove();
         }, 300);
+    }
+    static addDialog(dialog) {
+        const id = Lib_1.Lib.uniqId();
+        this.__openDialogs[id] = dialog;
+    }
+    /**
+     * ***forceClose*** : Forces all open dialogs to close.
+     */
+    static forceClose() {
+        const c = Object.keys(this.__openDialogs);
+        for (let n = 0; n < c.length; n++) {
+            const id = c[n];
+            const dialog = this.__openDialogs[id];
+            dialog.close();
+            delete this.__openDialogs[id];
+        }
     }
     static bind(mjs, dialogName, sendData) {
         if (dialogName)
@@ -364,6 +451,7 @@ class Dialog extends Render_1.Render {
             dialogMjs.addClass("open");
         }, 100);
         const dialog = this.loadClass(dialogMjs, dialogName, option.sendData, this);
+        Dialog.addDialog(dialog);
         if (option.handle)
             option.handle(dialog);
         return dialog;
@@ -377,6 +465,7 @@ class Dialog extends Render_1.Render {
 }
 exports.Dialog = Dialog;
 Dialog.type = "Dialog";
+Dialog.__openDialogs = {};
 ;
 return exports;});
 sfa.setFn("ModernJS", ()=>{var exports = {};
@@ -1576,30 +1665,34 @@ class Response {
         if (this.isBack)
             return false;
         this.isBack = true;
-        let backUrl;
+        let hdata;
         if (this.routeType == App_1.AppRouteType.application) {
             if (Data_1.Data.getLength("history") == 1)
                 return false;
             Data_1.Data.pop("history");
-            backUrl = Data_1.Data.now("history");
+            hdata = Data_1.Data.now("history");
         }
         else if (this.routeType == App_1.AppRouteType.web) {
             history.back();
             return true;
         }
-        const route = Routes_1.Routes.searchRoute(backUrl);
-        Response.rendering(route).then(() => {
+        const route = Routes_1.Routes.searchRoute(hdata.url);
+        Response.rendering(route, hdata.data).then(() => {
             this.isBack = false;
         });
         return true;
     }
-    static next(url, send) {
+    static next(url, data) {
         if (Response.lock)
             return;
         this.isBack = false;
-        Data_1.Data.push("history", url);
+        const hdata = {
+            url: url,
+            data: data,
+        };
+        Data_1.Data.push("history", hdata);
         const route = Routes_1.Routes.searchRoute(url);
-        Response.rendering(route, send);
+        Response.rendering(route, data);
         if (this.routeType == App_1.AppRouteType.web)
             location.href = "#" + url;
     }
@@ -1609,11 +1702,15 @@ class Response {
      * @param {string} url route path
      * @returns {void}
      */
-    static addHistory(url) {
+    static addHistory(url, data) {
         if (Response.lock)
             return;
         this.isBack = false;
-        Data_1.Data.push("history", url);
+        const hdata = {
+            url: url,
+            data: data,
+        };
+        Data_1.Data.push("history", hdata);
     }
     /**
      * ***historyClear*** : Clear screen transition history
@@ -1661,70 +1758,65 @@ class Response {
             return Data_1.Data.get("beforeController");
     }
     // rendering....
-    static rendering(route, send) {
+    static rendering(route, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const MyApp = require("app/config/App").MyApp;
-            try {
-                // Controller & View Leave 
-                const befCont = Data_1.Data.get("beforeController");
-                if (befCont) {
-                    const befContAction = Data_1.Data.get("beforeControllerAction");
-                    const res = yield befCont.handleLeave(befContAction);
-                    if (typeof res == "boolean" && res === false)
+            // Controller & View Leave 
+            const befCont = Data_1.Data.get("beforeController");
+            if (befCont) {
+                const befContAction = Data_1.Data.get("beforeControllerAction");
+                const res = yield befCont.handleLeave(befContAction);
+                if (typeof res == "boolean" && res === false)
+                    return;
+                if (this.isBack) {
+                    const resBack = yield befCont.handleLeaveBack(befContAction);
+                    if (typeof resBack == "boolean" && resBack === false)
                         return;
-                    if (this.isBack) {
-                        const resBack = yield befCont.handleLeaveBack(befContAction);
-                        if (typeof resBack == "boolean" && resBack === false)
-                            return;
-                    }
-                    if (this.isNext) {
-                        const resNext = yield befCont.handleLeaveNext(befContAction);
-                        if (typeof resNext == "boolean" && resNext === false)
-                            return;
-                    }
                 }
-                const befView = Data_1.Data.get("beforeView");
-                if (befView) {
-                    const res = yield befView.handleLeave();
-                    if (typeof res == "boolean" && res === false)
+                if (this.isNext) {
+                    const resNext = yield befCont.handleLeaveNext(befContAction);
+                    if (typeof resNext == "boolean" && resNext === false)
                         return;
-                    if (this.isBack) {
-                        const resBack = yield befView.handleLeaveBack();
-                        if (typeof resBack == "boolean" && resBack === false)
-                            return;
-                    }
-                    if (this.isNext) {
-                        const resNext = yield befView.handleLeaveNext();
-                        if (typeof resNext == "boolean" && resNext === false)
-                            return;
-                    }
-                }
-                if (MyApp.animationCloseClassName)
-                    (0, ModernJS_1.dom)("main").addClass(MyApp.animationCloseClassName);
-                if (MyApp.animationOpenClassName)
-                    (0, ModernJS_1.dom)("main").removeClass(MyApp.animationOpenClassName);
-                if (MyApp.delay)
-                    yield Lib_1.Lib.sleep(MyApp.delay);
-                if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
-                    if (MyApp.notFoundView) {
-                        route.view = MyApp.notFoundView;
-                        yield Response.renderingOnView(route, send);
-                    }
-                    throw ("Page Not found. \"" + route.url + "\"");
-                }
-                if (route.controller) {
-                    yield Response.renderingOnController(route, send);
-                }
-                else if (route.view) {
-                    yield Response.renderingOnView(route, send);
                 }
             }
-            catch (error) {
-                console.error(error);
+            const befView = Data_1.Data.get("beforeView");
+            if (befView) {
+                const res = yield befView.handleLeave();
+                if (typeof res == "boolean" && res === false)
+                    return;
+                if (this.isBack) {
+                    const resBack = yield befView.handleLeaveBack();
+                    if (typeof resBack == "boolean" && resBack === false)
+                        return;
+                }
+                if (this.isNext) {
+                    const resNext = yield befView.handleLeaveNext();
+                    if (typeof resNext == "boolean" && resNext === false)
+                        return;
+                }
+            }
+            if (MyApp.animationCloseClassName)
+                (0, ModernJS_1.dom)("main").addClass(MyApp.animationCloseClassName);
+            if (MyApp.animationOpenClassName)
+                (0, ModernJS_1.dom)("main").removeClass(MyApp.animationOpenClassName);
+            if (MyApp.delay)
+                yield Lib_1.Lib.sleep(MyApp.delay);
+            if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
+                if (MyApp.notFoundView) {
+                    route.view = MyApp.notFoundView;
+                    yield Response.renderingOnView(route, data);
+                }
+                throw ("Page Not found. \"" + route.url + "\"");
+            }
+            if (route.controller) {
+                yield Response.renderingOnController(route, data);
+            }
+            else if (route.view) {
+                yield Response.renderingOnView(route, data);
             }
         });
     }
-    static renderingOnController(route, send) {
+    static renderingOnController(route, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const controllerName = Lib_1.Lib.getModuleName(route.controller + "Controller");
             const controllerPath = "app/controller/" + Lib_1.Lib.getModulePath(route.controller + "Controller");
@@ -1733,7 +1825,7 @@ class Response {
             }
             const controllerClass = use(controllerPath);
             const cont = new controllerClass[controllerName]();
-            cont.sendData = send;
+            cont.sendData = data;
             const viewName = route.action + "View";
             const viewPath = "app/view/" + route.controller + "/" + Lib_1.Lib.getModulePath(viewName);
             let vw;
@@ -1744,7 +1836,7 @@ class Response {
                 }
                 else {
                     vw = new View_[Lib_1.Lib.getModuleName(viewName)]();
-                    vw.sendData = send;
+                    vw.sendData = data;
                 }
             }
             if (Data_1.Data.get("beforeControllerPath") != controllerPath) {
@@ -1797,7 +1889,7 @@ class Response {
                 yield vw.handleRenderAfter();
         });
     }
-    static renderingOnView(route, send) {
+    static renderingOnView(route, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const viewName = Lib_1.Lib.getModuleName(route.view + "View");
             const viewPath = "app/view/" + Lib_1.Lib.getModulePath(route.view + "View");
@@ -1806,7 +1898,7 @@ class Response {
             }
             const View_ = use(viewPath);
             const vm = new View_[viewName]();
-            vm.sendData = send;
+            vm.sendData = data;
             if (Data_1.Data.get("beforeViewPath") != viewPath) {
                 Data_1.Data.set("beforeViewPath", viewPath);
                 if (vm.handleBegin)
@@ -1825,7 +1917,26 @@ class Response {
                 (0, ModernJS_1.dom)("main").removeClass(MyApp.animationCloseClassName);
             if (MyApp.animationOpenClassName)
                 (0, ModernJS_1.dom)("main").addClass(MyApp.animationOpenClassName);
+            vm.myMjs = (0, ModernJS_1.dom)("main article");
             yield vm.handleRenderBefore();
+            // is next page..
+            if (Response.isNext) {
+                if (route.args) {
+                    yield vm.handleNext(...route.args);
+                }
+                else {
+                    yield vm.handleNext();
+                }
+            }
+            // is back page...
+            if (Response.isBack) {
+                if (route.args) {
+                    yield vm.handleBack(...route.args);
+                }
+                else {
+                    yield vm.handleBack();
+                }
+            }
             if (route.args) {
                 yield vm.handle(...route.args);
             }
@@ -2100,6 +2211,17 @@ class Render {
     }
     /**
      * ***vdos*** : Virtual DOM List of ModernJS Classes.
+     * (``mjs`` is also available as a proxy.)
+     *
+     * Example: First, place a v attribute tag in the HTML file.
+     * ```html
+     * <h1 v="mainTitle"></h1>
+     * ```
+     * Insert text in the View class etc. as follows:
+     * ```typescript
+     * this.vdos.mainTitle.text = "MainTitle Text...";
+     * ```
+     * [How to use VirtualDOM is described in ModernJS classes.](./ModernJS.ts)
      */
     get vdos() {
         return this.mjs;
@@ -2641,6 +2763,30 @@ class Lib {
     }
     static datetime(datetime) {
         return new SbnDateTime(datetime);
+    }
+    /**
+     * passByValue
+     * @param {any} values
+     * @returns
+     */
+    static passByValue(values) {
+        return this._passByValue(values);
+    }
+    static _passByValue(values) {
+        let buffers = {};
+        const c = Object.keys(values);
+        for (let n = 0; n < c.length; n++) {
+            const name = c[n];
+            const value = values[name];
+            if (typeof value == "object") {
+                const value_ = this._passByValue(value);
+                buffers[name] = value_;
+            }
+            else {
+                buffers[name] = value;
+            }
+        }
+        return buffers;
     }
     /**
      * ***sleep*** :  Stop processing for a certain period of time.(Synchronous processing)
@@ -3247,18 +3393,28 @@ exports.ValidateErrorResult = ValidateErrorResult;
  * Specify validation check rules directly using the ``verify`` method, etc.
  */
 class Validation {
-    static verify(data, rules) {
+    static verify(data, rules, options) {
         const my = new this();
-        if (rules)
-            my.rules = rules;
+        if (rules) {
+            if (typeof rules == "string") {
+                if (my[rules])
+                    my.rules = my[rules];
+            }
+            else {
+                my.rules = rules;
+            }
+        }
         return my.verify(data);
     }
     /**
      * ***verify*** : Runs validation checks on given input data.
      * @param {any} data Input data
+     * @param {ValidateOption} options Validate Options
      * @returns {ValidateErrorResult}
      */
-    verify(data) {
+    verify(data, options) {
+        if (!options)
+            options = {};
         const vm = new ValidateMethod(data, this);
         const c = Object.keys(this.rules);
         let result = new ValidateErrorResult();
@@ -3277,12 +3433,18 @@ class Validation {
                         if (!status) {
                             if (!result.errors[name])
                                 result.errors[name] = [];
-                            result.errors[name].push({
+                            const errors = {
                                 rule: rule.rule,
                                 index: index,
                                 args: rule.args,
                                 message: rule.message,
-                            });
+                            };
+                            if (options.oneMessage) {
+                                result.errors[name][0] = errors;
+                            }
+                            else {
+                                result.errors[name].push(errors);
+                            }
                         }
                     });
                 }
@@ -3664,6 +3826,16 @@ class View extends Render_1.Render {
      */
     handle(...aregment) { }
     /**
+     * handleNext
+     * A handler that runs automatically when the screen is painted after advancing from the previous screen.
+     */
+    handleNext(...aregment) { }
+    /**
+     * handleBack
+     * A handler that runs automatically when painting after returning from the previous screen.
+     */
+    handleBack(...aregment) { }
+    /**
      * ***handleAlways*** : A handler that runs automatically when the View is displayed on screen.
      * This event is always executed even if the same View has already been rendered..
      */
@@ -3751,6 +3923,57 @@ class UI extends Render_1.Render {
 }
 exports.UI = UI;
 UI.type = "UI";
+;
+return exports;});
+sfa.setFn("Core", ()=>{var exports = {};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.View = exports.ValidateMethod = exports.ValidateErrorResult = exports.ValidateRule = exports.Validation = exports.UI = exports.Template = exports.LocalStorage = exports.SessionStorage = exports.Shortcode = exports.DecisionRouteMode = exports.Routes = exports.Response = exports.Render = exports.dom = exports.ModernJS = exports.SbnDateTime = exports.Lib = exports.KeyEvent = exports.Dialog = exports.Data = exports.Controller = exports.Background = exports.AppRouteType = exports.App = exports.AjaxMethod = exports.Ajax = void 0;
+var Ajax_1 = require("Ajax");
+Object.defineProperty(exports, "Ajax", { enumerable: true, get: function () { return Ajax_1.Ajax; } });
+Object.defineProperty(exports, "AjaxMethod", { enumerable: true, get: function () { return Ajax_1.AjaxMethod; } });
+var App_1 = require("App");
+Object.defineProperty(exports, "App", { enumerable: true, get: function () { return App_1.App; } });
+Object.defineProperty(exports, "AppRouteType", { enumerable: true, get: function () { return App_1.AppRouteType; } });
+var Background_1 = require("Background");
+Object.defineProperty(exports, "Background", { enumerable: true, get: function () { return Background_1.Background; } });
+var Controller_1 = require("Controller");
+Object.defineProperty(exports, "Controller", { enumerable: true, get: function () { return Controller_1.Controller; } });
+var Data_1 = require("Data");
+Object.defineProperty(exports, "Data", { enumerable: true, get: function () { return Data_1.Data; } });
+var Dialog_1 = require("Dialog");
+Object.defineProperty(exports, "Dialog", { enumerable: true, get: function () { return Dialog_1.Dialog; } });
+var KeyEvent_1 = require("KeyEvent");
+Object.defineProperty(exports, "KeyEvent", { enumerable: true, get: function () { return KeyEvent_1.KeyEvent; } });
+var Lib_1 = require("Lib");
+Object.defineProperty(exports, "Lib", { enumerable: true, get: function () { return Lib_1.Lib; } });
+Object.defineProperty(exports, "SbnDateTime", { enumerable: true, get: function () { return Lib_1.SbnDateTime; } });
+var ModernJS_1 = require("ModernJS");
+Object.defineProperty(exports, "ModernJS", { enumerable: true, get: function () { return ModernJS_1.ModernJS; } });
+Object.defineProperty(exports, "dom", { enumerable: true, get: function () { return ModernJS_1.dom; } });
+var Render_1 = require("Render");
+Object.defineProperty(exports, "Render", { enumerable: true, get: function () { return Render_1.Render; } });
+var Response_1 = require("Response");
+Object.defineProperty(exports, "Response", { enumerable: true, get: function () { return Response_1.Response; } });
+var Routes_1 = require("Routes");
+Object.defineProperty(exports, "Routes", { enumerable: true, get: function () { return Routes_1.Routes; } });
+Object.defineProperty(exports, "DecisionRouteMode", { enumerable: true, get: function () { return Routes_1.DecisionRouteMode; } });
+var Shortcode_1 = require("Shortcode");
+Object.defineProperty(exports, "Shortcode", { enumerable: true, get: function () { return Shortcode_1.Shortcode; } });
+var Storage_1 = require("Storage");
+Object.defineProperty(exports, "SessionStorage", { enumerable: true, get: function () { return Storage_1.SessionStorage; } });
+Object.defineProperty(exports, "LocalStorage", { enumerable: true, get: function () { return Storage_1.LocalStorage; } });
+var Template_1 = require("Template");
+Object.defineProperty(exports, "Template", { enumerable: true, get: function () { return Template_1.Template; } });
+var UI_1 = require("UI");
+Object.defineProperty(exports, "UI", { enumerable: true, get: function () { return UI_1.UI; } });
+var Validation_1 = require("Validation");
+Object.defineProperty(exports, "Validation", { enumerable: true, get: function () { return Validation_1.Validation; } });
+Object.defineProperty(exports, "ValidateRule", { enumerable: true, get: function () { return Validation_1.ValidateRule; } });
+Object.defineProperty(exports, "ValidateErrorResult", { enumerable: true, get: function () { return Validation_1.ValidateErrorResult; } });
+Object.defineProperty(exports, "ValidateMethod", { enumerable: true, get: function () { return Validation_1.ValidateMethod; } });
+var View_1 = require("View");
+Object.defineProperty(exports, "View", { enumerable: true, get: function () { return View_1.View; } });
 ;
 return exports;});
 sfa.setFn("CORERES/dialog/style.css", ()=>{ return "ZGlhbG9nIHsKICAgIGRpc3BsYXk6YmxvY2s7CiAgICBwb3NpdGlvbjpmaXhlZDsKICAgIGxlZnQ6MDsKICAgIHRvcDowOwogICAgd2lkdGg6MTAwJTsKICAgIGhlaWdodDoxMDAlOwogICAgei1pbmRleDoxMDA7CiAgICBiYWNrZ3JvdW5kOnJnYmEoMCwwLDAsMC42KTsKICAgIG9wYWNpdHk6MDsKICAgIHRyYW5zaXRpb24tZHVyYXRpb246MzAwbXM7CiAgICB0cmFuc2l0aW9uLXByb3BlcnR5OiBvcGFjaXR5Owp9CmRpYWxvZy5vcGVuIHsKICAgIG9wYWNpdHk6IDE7Cn0KZGlhbG9nIGR3aW5kb3cgewogICAgcG9zaXRpb246Zml4ZWQ7CiAgICBsZWZ0OjUwJTsKICAgIHRvcDo1MCU7CiAgICB3aWR0aDoxMDAlOwogICAgbWF4LXdpZHRoOjgwJTsKICAgIHRyYW5zZm9ybTp0cmFuc2xhdGVYKC01MCUpIHRyYW5zbGF0ZVkoLTUwJSk7CiAgICBiYWNrZ3JvdW5kOndoaXRlOwogICAgY29sb3I6YmxhY2s7Cn0="});
@@ -4080,13 +4303,19 @@ const LoadingDialog_1 = require("app/dialog/LoadingDialog");
  * Display screen immediately after launching the app.
  */
 class HomeView extends View_1.View {
+    handleBack() {
+        console.log("handle Back ... OK");
+    }
+    handleNext() {
+        console.log("handle Next ... OK");
+    }
     handle() {
         this.back = false;
         this.title = "Home";
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.
-            Response_1.Response.next("/page1a");
+            Response_1.Response.next("/page1");
         };
         // When the page2 button is pressed.
         this.vdos.page2.onClick = () => {
@@ -4446,29 +4675,24 @@ sfa.setFn("app/view/page1/Type1View", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Type1View = void 0;
+const Lib_1 = require("Lib");
 const View_1 = require("app/view/View");
 class Type1View extends View_1.View {
     handle() {
-        this.title = "Page1 Type1";
-        this.setDt();
-        this.interval = setInterval(() => {
-            this.setDt();
-        }, 1000);
+        this.title = "Page1 (Type1)";
+        this.vdos.throwBtn.onClick = () => {
+            throw Error("ERROR TEST!");
+        };
+        this.setDateTime();
+        this.stt = setInterval(() => {
+            this.setDateTime();
+        }, 250);
     }
-    setDt() {
-        const d_ = new Date();
-        this.vdos.datetime.text = "DateTime = " +
-            d_.getFullYear() + "/" +
-            ("00" + (d_.getMonth() + 1)).slice(-2) + "/" +
-            ("00" + d_.getDate()).slice(-2) + " " +
-            ("00" + d_.getHours()).slice(-2) + ":" +
-            ("00" + d_.getMinutes()).slice(-2) + ":" +
-            ("00" + d_.getSeconds()).slice(-2);
+    setDateTime() {
+        this.vdos.datetime.text = Lib_1.Lib.datetime().format("YYYY/MM/DD HH:II:SS");
     }
-    // Screen-off handler.
     handleLeave() {
-        // Interval Stop.
-        clearInterval(this.interval);
+        clearInterval(this.stt);
     }
 }
 exports.Type1View = Type1View;
@@ -4555,8 +4779,8 @@ sfa.setFn("rendering/ui/page7/item2.html", ()=>{ return "PGRpdiBzdHlsZT0iYm9yZGV
 sfa.setFn("rendering/ui/page7/item3.html", ()=>{ return "PGRpdiBzdHlsZT0iYmFja2dyb3VuZDpkYXJrZ3JlZW47Ym9yZGVyOnNvbGlkIDJweCBncmVlbjtwYWRkaW5nOjEwcHggMjBweDttYXJnaW4tYm90dG9tOjEwcHg7Ij4KICAgIDxkaXYgdj0ibWVzc2FnZSI+PC9kaXY+CjwvZGl2Pg==";});
 sfa.setFn("rendering/ui/page7/item4.html", ()=>{ return "PGRpdiBzdHlsZT0iYmFja2dyb3VuZDpyZ2IoMTkwLCA3MCwgNDApOyBib3JkZXI6c29saWQgMnB4IG9yYW5nZTtwYWRkaW5nOjEwcHggMjBweDttYXJnaW4tYm90dG9tOjEwcHg7Ij4KICAgIDxkaXYgdj0ibWVzc2FnZSI+PC9kaXY+CjwvZGl2Pg==";});
 sfa.setFn("rendering/view/home.html", ()=>{ return "PHRhYmxlIGNsYXNzPSJ3aW5kb3ciPgogICAgPHRyIGNsYXNzPSJtaWRkbGUiPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibTIwIj4KICAgICAgICAgICAgICAgIDxwPkFwcGxpY2F0aW9uIFRlc3QgU2FtcGxlLi4uPC9wPgogICAgICAgICAgICAgICAgPHA+PGEgY2xhc3M9ImJ0biIgdj0icGFnZTEiPk5leHQgUGFnZTE8L2E+PC9wPgogICAgICAgICAgICAgICAgPHA+PGEgY2xhc3M9ImJ0biIgdj0icGFnZTIiPk5leHQgUGFnZTIgKE1vZGVybkpTKTwvYT48L3A+CiAgICAgICAgICAgICAgICA8cD48YSBjbGFzcz0iYnRuIiB2PSJwYWdlMyI+TmV4dCBQYWdlMyAoRGlhbG9nKTwvYT48L3A+CiAgICAgICAgICAgICAgICA8cD48YSBjbGFzcz0iYnRuIiB2PSJwYWdlNCI+TmV4dCBQYWdlNCAoTGlzdCk8L2E+PC9wPgogICAgICAgICAgICAgICAgPHA+PGEgY2xhc3M9ImJ0biIgdj0icGFnZTUiPk5leHQgUGFnZTUgKFZhbGlkYXRpb24pPC9hPjwvcD4KICAgICAgICAgICAgICAgIDxwPjxhIGNsYXNzPSJidG4iIHY9InBhZ2U2Ij4zcyBMb2FkLi4uLiA9PiBQYWdlNjwvYT48L3A+CiAgICAgICAgICAgICAgICA8cD48YSBjbGFzcz0iYnRuIiB2PSJwYWdlNyI+TmV4dCBQYWdlNyAoVUkgYmluZC9hcHBlbmQpPC9hPjwvcD4KICAgICAgICAgICAgPC9kaXY+ICAgICAgICAgICAgCiAgICAgICAgPC90ZD4KICAgIDwvdHI+CjwvdGFibGU+Cg==";});
-sfa.setFn("rendering/view/notFound.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMj5Ob3QgRm91bmQuPC9oMj4KCjwvZGl2Pg==";});
-sfa.setFn("rendering/view/page1/type1.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMj5UeXBlMSAuLi4uIE9LPC9oMj4KICAgIDxoNCB2PSJkYXRldGltZSI+PC9oND4KPC9kaXY+";});
+sfa.setFn("rendering/view/notFound.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMj5Ob3QgRm91bmQuPC9oMj4KPC9kaXY+";});
+sfa.setFn("rendering/view/page1/type1.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxoMj5UeXBlMSAuLi4uIE9LPC9oMj4KICAgIDxwPjxhIHY9InRocm93QnRuIj5UaHJvdyBFcnJvciBUZXN0PC9hPjwvcD4KICAgIDxoMyB2PSJkYXRldGltZSI+PC9oMz4KPC9kaXY+";});
 sfa.setFn("rendering/view/page1.html", ()=>{ return "PHRhYmxlIGNsYXNzPSJ3aW5kb3ciPgogICAgPHRyPgogICAgICAgIDx0ZD4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ibTEwIj4KICAgICAgICAgICAgICAgIDxwPlBhZ2UxIFRleHQgU2FtcGxlLi4uPC9wPgogICAgICAgICAgICAgICAgPGRpdiB2PSJpdGVtMSI+PC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IHY9Iml0ZW0yIj48L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC90ZD4KICAgIDwvdHI+CiAgICA8dHIgY2xhc3M9ImJvdHRvbSI+CiAgICAgICAgPHRkPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJtMTAiPgogICAgICAgICAgICAgICAgPGEgY2xhc3M9ImJ0biIgdj0iYnRuLm5leHQiPk5leHQgVHlwZTEuLi48L2E+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJtMTAiPgogICAgICAgICAgICAgICAgPGEgY2xhc3M9ImJ0biIgdj0iYnRuLnJlcGxhY2UiPlJlcGxhY2UgVHlwZTIuLi48L2E+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvdGQ+CiAgICA8L3RyPgo8L3RhYmxlPgo=";});
 sfa.setFn("rendering/view/page2/detail.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxwPlRleHQgU2FtcGxlIFRleHQgU2FtcGxlIC4uLi4uLi48L3A+CjwvZGl2Pg==";});
 sfa.setFn("rendering/view/page2.html", ()=>{ return "PGRpdiBjbGFzcz0ibTEwIj4KICAgIDxwIHY9ImRlc2NyaXB0aW9uIj48L3A+CiAgICA8dWw+CiAgICAgICAgPGxpIHY9Iml0ZW0iPlRleHQgU2FtcGxlIC4uLi48L2xpPgogICAgICAgIDxsaSB2PSJpdGVtIj5UZXh0IFNhbXBsZSAuLi4uPC9saT4KICAgICAgICA8bGkgdj0iaXRlbSI+VGV4dCBTYW1wbGUgLi4uLjwvbGk+CiAgICAgICAgPGxpIHY9Iml0ZW0iPlRleHQgU2FtcGxlIC4uLi48L2xpPgogICAgICAgIDxsaSB2PSJpdGVtIj5UZXh0IFNhbXBsZSAuLi4uPC9saT4KICAgICAgICA8bGkgdj0iaXRlbSI+VGV4dCBTYW1wbGUgLi4uLjwvbGk+CiAgICAgICAgPGxpIHY9Iml0ZW0iPlRleHQgU2FtcGxlIC4uLi48L2xpPgogICAgPC91bD4KICAgIDxhIGNsYXNzPSJidG4iIHY9ImJ1dHRvbjEiPkJ1dHRvbjE8L2E+CgogICAgPHVsPgogICAgICAgIDxsaT48cD48YSBjbGFzcz0iYnRuIiB2PSJsaW5rMSI+TmV4dCBQYWdlMihpZCA9IDEpPC9hPjwvcD48L2xpPgogICAgICAgIDxsaT48cD48YSBjbGFzcz0iYnRuIiB2PSJsaW5rMiI+TmV4dCBQYWdlMihpZCA9IDIpPC9hPjwvcD48L2xpPgogICAgICAgIDxsaT48cD48YSBjbGFzcz0iYnRuIiB2PSJsaW5rMyI+TmV4dCBQYWdlMihpZCA9IDMpPC9hPjwvcD48L2xpPgogICAgPC91bD4KPC9kaXY+";});

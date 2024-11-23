@@ -19,6 +19,12 @@ const LoadingDialog_1 = require("app/dialog/LoadingDialog");
  * Display screen immediately after launching the app.
  */
 class HomeView extends View_1.View {
+    handleBack() {
+        console.log("handle Back ... OK");
+    }
+    handleNext() {
+        console.log("handle Next ... OK");
+    }
     handle() {
         this.back = false;
         this.title = "Home";

@@ -9,6 +9,14 @@ import { LoadingDialog } from "app/dialog/LoadingDialog";
  */
 export class HomeView extends View {
 
+    public handleBack() {
+        console.log("handle Back ... OK");
+    }
+
+    public handleNext() {
+        console.log("handle Next ... OK");
+    }
+
     public handle() {
         this.back = false;
         this.title = "Home";

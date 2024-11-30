@@ -1,7 +1,7 @@
 :root {
-    --main_background: rgb(70,70,70);
+    --main_background: rgb(50,50,50);
     --main_color: rgb(220,220,220);
-    --header_background: rgb(50,50,50);
+    --header_background: rgb(40,40,40);
     --header_color: rgb(220,220,220);;
     --header_border_size: solid 1px rgb(160,160,160);
     --arrow_border:solid 1px rgb(220,220,220);
@@ -44,6 +44,9 @@ header > * {
 }
 header > *.max {
     width:100%;
+}
+header .arrow {
+    top: 5px;
 }
 header h1 {
     margin:0;

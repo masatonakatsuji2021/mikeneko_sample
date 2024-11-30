@@ -1,5 +1,6 @@
 import { Response } from "Response";
 import { View } from "app/view/View";
+import { RURL } from "app/config/Routes";
 
 /**
  * Page2 View Class
@@ -37,13 +38,13 @@ export class Page2View extends View {
 
         // link 
         this.vdos.link1.onClick = () => {
-            Response.next("/page2/1");
+            Response.next(RURL.Page2.getDetail(1));
         };
         this.vdos.link2.onClick = () => {
-            Response.next("/page2/2");
+            Response.next(RURL.Page2.getDetail(2));
         };
         this.vdos.link3.onClick = () => {
-            Response.next("/page2/3");
+            Response.next(RURL.Page2.getDetail(3));
         };
     }
 }

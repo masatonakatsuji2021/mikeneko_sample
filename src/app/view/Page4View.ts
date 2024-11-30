@@ -1,6 +1,7 @@
 import { UI } from "UI";
 import { Response } from "Response";
 import { View } from "app/view/View";
+import { RURL } from "app/config/Routes";
 
 export class Page4View extends View {
 
@@ -24,7 +25,7 @@ export class Page4View extends View {
 
             // link button click eventhandle.
             item.mjs.link.onClick = (_, my) => {
-                Response.next("/page4/" + my.datas.id);
+                Response.next(RURL.Page4.getDetail(my.datas.id));
             };
         });
     }

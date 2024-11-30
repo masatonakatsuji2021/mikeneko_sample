@@ -4,6 +4,7 @@ exports.Page4View = void 0;
 const UI_1 = require("UI");
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
+const Routes_1 = require("app/config/Routes");
 class Page4View extends View_1.View {
     handle() {
         this.title = "Page4";
@@ -19,7 +20,7 @@ class Page4View extends View_1.View {
             item.mjs.link.datas.id = s_.id;
             // link button click eventhandle.
             item.mjs.link.onClick = (_, my) => {
-                Response_1.Response.next("/page4/" + my.datas.id);
+                Response_1.Response.next(Routes_1.RURL.Page4.getDetail(my.datas.id));
             };
         });
     }

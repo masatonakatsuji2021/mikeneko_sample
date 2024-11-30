@@ -2,6 +2,7 @@ import { Lib } from "Lib";
 import { Response } from "Response";
 import { View } from "app/view/View";
 import { LoadingDialog } from "app/dialog/LoadingDialog";
+import { RURL } from "app/config/Routes";
 
 /**
  * Home View Class
@@ -24,31 +25,31 @@ export class HomeView extends View {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.
-            Response.next("/page1");
+            Response.next(RURL.Page1.Top);
         };
 
         // When the page2 button is pressed.
         this.vdos.page2.onClick = () => {
             // next to Page2.
-            Response.next("/page2");
+            Response.next(RURL.Page2.Top);
         };
 
         // When the page3 button is pressed.
         this.vdos.page3.onClick = () => {
             // next to Page3.
-            Response.next("/page3");
+            Response.next(RURL.Page3);
         };
 
         // When the page4 button is pressed.
         this.vdos.page4.onClick = () => {
             // next to Page4.
-            Response.next("/page4");
+            Response.next(RURL.Page4.Top);
         };
 
         // When the page5 button is pressed.
         this.vdos.page5.onClick = () => {
             // next to Page5.
-            Response.next("/page5");
+            Response.next(RURL.Page5);
         };
 
         // When the page6 button is pressed.
@@ -82,13 +83,19 @@ export class HomeView extends View {
             Response.lock = false;
 
             // next to Page6..
-            Response.next("/page6");
+            Response.next(RURL.Page6);
         };
 
         // When the page7 button is pressed.
         this.vdos.page7.onClick = () => {
             // next to Page7.
-            Response.next("/page7");
+            Response.next(RURL.Page7);
+        };
+
+        // When the not found page accessed..
+        this.vdos.pageNotfound.onClick = () => {
+            // next to Arekore
+            Response.next(RURL.Arekore);
         };
     }
 }

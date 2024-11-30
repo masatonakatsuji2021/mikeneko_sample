@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page2View = void 0;
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
+const Routes_1 = require("app/config/Routes");
 /**
  * Page2 View Class
  */
@@ -32,13 +33,13 @@ class Page2View extends View_1.View {
         };
         // link 
         this.vdos.link1.onClick = () => {
-            Response_1.Response.next("/page2/1");
+            Response_1.Response.next(Routes_1.RURL.Page2.getDetail(1));
         };
         this.vdos.link2.onClick = () => {
-            Response_1.Response.next("/page2/2");
+            Response_1.Response.next(Routes_1.RURL.Page2.getDetail(2));
         };
         this.vdos.link3.onClick = () => {
-            Response_1.Response.next("/page2/3");
+            Response_1.Response.next(Routes_1.RURL.Page2.getDetail(3));
         };
     }
 }

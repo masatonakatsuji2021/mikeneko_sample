@@ -10,10 +10,12 @@ import { RURL } from "app/config/Routes";
  */
 export class HomeView extends View {
 
+    /** handle back  */
     public handleBack() {
         console.log("handle Back ... OK");
     }
 
+    /** handle next */
     public handleNext() {
         console.log("handle Next ... OK");
     }
@@ -24,30 +26,35 @@ export class HomeView extends View {
 
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
+
             // next to Page1.
             Response.next(RURL.Page1.Top);
         };
 
         // When the page2 button is pressed.
         this.vdos.page2.onClick = () => {
+
             // next to Page2.
             Response.next(RURL.Page2.Top);
         };
 
         // When the page3 button is pressed.
         this.vdos.page3.onClick = () => {
+
             // next to Page3.
             Response.next(RURL.Page3);
         };
 
         // When the page4 button is pressed.
         this.vdos.page4.onClick = () => {
+
             // next to Page4.
             Response.next(RURL.Page4.Top);
         };
 
         // When the page5 button is pressed.
         this.vdos.page5.onClick = () => {
+
             // next to Page5.
             Response.next(RURL.Page5);
         };

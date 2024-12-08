@@ -1,4 +1,4 @@
-import { ModernJS } from "ModernJS";
+import { VirtualDom } from "VirtualDom";
 import { Response } from "Response";
 import { UI } from "UI";
 
@@ -7,8 +7,8 @@ import { UI } from "UI";
  */
 export class HeaderUI extends UI {
 
-    public static title : ModernJS;
-    public static back : ModernJS;
+    public static title : VirtualDom;
+    public static back : VirtualDom;
 
     /**
      * Set the header title

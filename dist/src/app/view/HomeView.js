@@ -20,9 +20,11 @@ const Routes_1 = require("app/config/Routes");
  * Display screen immediately after launching the app.
  */
 class HomeView extends View_1.View {
+    /** handle back  */
     handleBack() {
         console.log("handle Back ... OK");
     }
+    /** handle next */
     handleNext() {
         console.log("handle Next ... OK");
     }

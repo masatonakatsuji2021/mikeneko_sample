@@ -240,7 +240,7 @@ class Controller {
         return this.myMjs;
     }
     /**
-     * ***vdos*** : Virtual DOM List of ModernJS Classes.
+     * ***vdos*** : Virtual DOM List of VirtualDom Classes.
      */
     get vdos() {
         return this.mjs;
@@ -371,7 +371,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dialog = void 0;
 const Render_1 = require("Render");
 const Lib_1 = require("Lib");
-const ModernJS_1 = require("ModernJS");
+const VirtualDom_1 = require("VirtualDom");
 /**
  * ***Dialog*** : A class for displaying or manipulating a dialog screen.
  */
@@ -443,7 +443,7 @@ class Dialog extends Render_1.Render {
             option = {};
         this.setDialogCss();
         const dialogStr = "<dwindow>" + this.getHtml(dialogName) + "</dwindow>";
-        const dialogMjs = ModernJS_1.ModernJS.create(dialogStr, "dialog");
+        const dialogMjs = VirtualDom_1.VirtualDom.create(dialogStr, "dialog");
         if (option.class) {
             if (typeof option.class == "string")
                 option.class = [option.class];
@@ -451,7 +451,7 @@ class Dialog extends Render_1.Render {
                 dialogMjs.addClass(c);
             });
         }
-        (0, ModernJS_1.dom)("body").append(dialogMjs, true);
+        (0, VirtualDom_1.dom)("body").append(dialogMjs, true);
         dialogMjs.reload();
         setTimeout(() => {
             dialogMjs.addClass("open");
@@ -463,10 +463,10 @@ class Dialog extends Render_1.Render {
         return dialog;
     }
     static setDialogCss() {
-        if ((0, ModernJS_1.dom)("head").querySelector("link[m=dl]").length > 0)
+        if ((0, VirtualDom_1.dom)("head").querySelector("link[m=dl]").length > 0)
             return;
         const style = require("CORERES/dialog/style.css");
-        (0, ModernJS_1.dom)("head").afterBegin("<link rel=\"stylesheet\" m=\"dl\" href=\"data:text/css;base64," + style + "\">");
+        (0, VirtualDom_1.dom)("head").afterBegin("<link rel=\"stylesheet\" m=\"dl\" href=\"data:text/css;base64," + style + "\">");
     }
 }
 exports.Dialog = Dialog;
@@ -474,31 +474,31 @@ Dialog.type = "Dialog";
 Dialog.__openDialogs = {};
 ;
 return exports;});
-sfa.setFn("ModernJS", ()=>{var exports = {};
+sfa.setFn("VirtualDom", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dom = exports.ModernJS = void 0;
+exports.dom = exports.VirtualDom = void 0;
 /**
- * ***ModernJS*** : Virtual DOM Classes.
+ * ***VirtualDom*** : Virtual DOM Classes.
  * When you specify the v attribute in an HTML tag, it is recognized as a virtual DOM.
  * The v attribute is considered a globally available virtual DOM.
  * ```html
  * <div v="test"></div>
  * ```
  */
-class ModernJS {
+class VirtualDom {
     constructor() {
         /**
          * ***els*** : List of target Element classes in the virtual DOM class.
          */
         this.els = [];
         /**
-         * ***childs*** : The child ModernJS class for this virtual DOM.
-         * The ModernJS class of the child can be set by specifying it in the v attribute of the HTML tag, separated by .
+         * ***childs*** : The child VirtualDom class for this virtual DOM.
+         * The VirtualDom class of the child can be set by specifying it in the v attribute of the HTML tag, separated by .
          * ```html
          * <div v="main.sub"></div>
          * ```
-         * In the above case, the following code can be used to manipulate the DOM as a child ModernJS
+         * In the above case, the following code can be used to manipulate the DOM as a child VirtualDom
          * ```typescript
          * mjs.main.childs.sub.text = "Sub Text....";
          * ```
@@ -511,7 +511,7 @@ class ModernJS {
         this.fileBuffers = [];
     }
     static create(text, tagName) {
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         if (!tagName)
             tagName = "div";
         if (text.indexOf("<tr") === 0 || text.indexOf("<td") === 0)
@@ -530,13 +530,13 @@ class ModernJS {
      * ```
      * To get the tag with the class attribute item as a virtual DOM, write the following code in TypeScript:
      * ```typescript
-     * const subQuery : ModernJS = ModernJS.dom(".item");
+     * const subQuery : VirtualDom = VirtualDom.dom(".item");
      * ```
      * @param {string} queryString QueryString
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     static dom(queryString) {
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         const qss = document.querySelectorAll(queryString);
         qss.forEach((el) => {
             mjs.addEl(el);
@@ -546,14 +546,14 @@ class ModernJS {
     /**
      * ***addEl*** : Manually adding elements to the Virtual DOM.
      * For example, after getting the p tag as an element,
-     * write the following code in TypeScript to create an empty ModernJS class and add the p tag element to it.
+     * write the following code in TypeScript to create an empty VirtualDom class and add the p tag element to it.
      * ```typescript
      * const el = document.querySelector("p");
-     * const mjs = ModernJS.create();
+     * const mjs = VirtualDom.create();
      * mjs.addEl(el);
      * ```
      * @param {HTMLElement} el HTMLElement
-     * @returns {MOdernJS}
+     * @returns {VirtualDom}
      */
     addEl(el) {
         this.els.push(el);
@@ -584,7 +584,7 @@ class ModernJS {
     /**
      * ***reload*** : Get the virtual DOM of the v attribute from the virtual DOM element.
      * The results can be obtained in children.
-     * @param {ModernJS?} context
+     * @param {VirtualDom?} context
      */
     reload(context) {
         if (!context)
@@ -592,12 +592,12 @@ class ModernJS {
         this.virtualAttributes("v", context, (parent, attrValue, el) => {
             if (parent) {
                 if (!parent.childs[attrValue])
-                    parent.childs[attrValue] = new ModernJS();
+                    parent.childs[attrValue] = new VirtualDom();
                 parent.childs[attrValue].addEl(el);
             }
             else {
                 if (!context.childs[attrValue])
-                    context.childs[attrValue] = new ModernJS();
+                    context.childs[attrValue] = new VirtualDom();
                 context.childs[attrValue].addEl(el);
             }
         });
@@ -616,14 +616,14 @@ class ModernJS {
                         return;
                     if (index == 0) {
                         if (!context.childs[a_])
-                            context.childs[a_] = new ModernJS();
+                            context.childs[a_] = new VirtualDom();
                         parent = context.childs[a_];
                         if (!parent.els.length)
                             parent.addEl(el);
                     }
                     else {
                         if (!parent.childs[a_])
-                            parent.childs[a_] = new ModernJS();
+                            parent.childs[a_] = new VirtualDom();
                         parent = parent.childs[a_];
                     }
                 });
@@ -641,11 +641,11 @@ class ModernJS {
      * ***first*** : Get the virtual DOM class that contains the first element
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * const first : ModernJS = mjs.first;
+     * const first : VirtualDom = mjs.first;
      * ```
      */
     get first() {
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         mjs.addEl(this.els[0]);
         return mjs;
     }
@@ -653,11 +653,11 @@ class ModernJS {
      * ***last*** : Get the virtual DOM class that contains the last element.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * const last : ModernJS = mjs.last;
+     * const last : VirtualDom = mjs.last;
      * ```
      */
     get last() {
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         mjs.addEl(this.els[this.els.length - 1]);
         return mjs;
     }
@@ -665,13 +665,13 @@ class ModernJS {
      * ***index*** : Gets the virtual DOM class that contains the element at the specified index.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * const three : ModernJS = mjs.index(2);
+     * const three : VirtualDom = mjs.index(2);
      * ```
      * @param {number} index Element Index Number
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     index(index) {
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         if (!this.els[index])
             return;
         mjs.addEl(this.els[index]);
@@ -683,7 +683,7 @@ class ModernJS {
     get prev() {
         // @ts-ignore
         const prevEl = this.els[0].previousElementSibling;
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         mjs.addEl(prevEl);
         return mjs;
     }
@@ -693,7 +693,7 @@ class ModernJS {
     get next() {
         // @ts-ignore
         const prevEl = this.els[0].nextElementSibling;
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         mjs.addEl(prevEl);
         return mjs;
     }
@@ -712,15 +712,15 @@ class ModernJS {
      * </div>
      * ```
      * To get the tag with the class attribute item as a virtual DOM, write the following code in TypeScript:
-     * (The variable main is the ModernJS class v="main" above.)
+     * (The variable main is the VirtualDom class v="main" above.)
      * ```typescript
-     * const item : ModernJS = main.querySelector(".item");
+     * const item : VirtualDom = main.querySelector(".item");
      * ```
      * @param {string} queryString QueryString
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     querySelector(queryString) {
-        const mjs = new ModernJS();
+        const mjs = new VirtualDom();
         this.els.forEach((el) => {
             const qss = el.querySelectorAll(queryString);
             qss.forEach((qs) => {
@@ -785,7 +785,7 @@ class ModernJS {
             else if (value instanceof HTMLElement) {
                 el.append(value);
             }
-            else if (value instanceof ModernJS) {
+            else if (value instanceof VirtualDom) {
                 el.append(value.els[0]);
                 const c = Object.keys(value.childs);
                 for (let n = 0; n < c.length; n++) {
@@ -830,7 +830,7 @@ class ModernJS {
             else if (value instanceof HTMLElement) {
                 el.insertAdjacentElement("afterbegin", value);
             }
-            else if (value instanceof ModernJS) {
+            else if (value instanceof VirtualDom) {
                 el.insertAdjacentElement("afterbegin", value.els[0]);
                 const c = Object.keys(value.childs);
                 for (let n = 0; n < c.length; n++) {
@@ -852,7 +852,7 @@ class ModernJS {
             else if (value instanceof HTMLElement) {
                 el.append(value);
             }
-            else if (value instanceof ModernJS) {
+            else if (value instanceof VirtualDom) {
                 el.append(value.els[0]);
                 const c = Object.keys(value.childs);
                 for (let n = 0; n < c.length; n++) {
@@ -872,7 +872,7 @@ class ModernJS {
      * ```typescript
      * mjs.remove();
      * ```
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     remove() {
         this.els.forEach((el) => {
@@ -887,7 +887,7 @@ class ModernJS {
      * mjs.style({ background: "rgb(255,100,0" });
      * ```
      * @param {[name : string] : string | number} stylesheets Style attribute information
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     style(stylesheets) {
         const c = Object.keys(stylesheets);
@@ -946,7 +946,7 @@ class ModernJS {
      * mjs.removeAttr("min");
      * ```
      * @param {string} name The name of the attribute to be deleted.
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     removeAttr(name) {
         this.els.forEach((el) => {
@@ -1093,7 +1093,7 @@ class ModernJS {
      * mjs.addClass("class2");
      * ```
      * @param {string} className add class attribute
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     addClass(className) {
         this.els.forEach((el) => {
@@ -1108,7 +1108,7 @@ class ModernJS {
      * mjs.removeClass("class2");
      * ```
      * @param {string} className delete class attribute
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     removeClass(className) {
         this.els.forEach((el) => {
@@ -1132,7 +1132,7 @@ class ModernJS {
      * mjs.removeData("data01");
      * ```
      * @param {string} name delete data name
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     removeData(name) {
         delete this.datas[name];
@@ -1141,7 +1141,7 @@ class ModernJS {
     on(event, listener, options) {
         this.els.forEach((el) => {
             const listener_ = (event) => {
-                const my = new ModernJS();
+                const my = new VirtualDom();
                 my.addEl(el);
                 my.datas = this.datas;
                 listener(event, my);
@@ -1154,7 +1154,7 @@ class ModernJS {
      * ***onClick*** : Set an event listener for when an element is clicked.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onClick = (e: Event, context: ModernJS) => {
+     * mjs.onClick = (e: Event, context: VirtualDom) => {
      *      console.log("click event...");
      *      context.style({ color: "red" });
      * };
@@ -1167,7 +1167,7 @@ class ModernJS {
      * ***onDblClick*** : Sets an event listener for when an element is double-clicked.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onDblClick = (e: Event, context: ModernJS) => {
+     * mjs.onDblClick = (e: Event, context: VirtualDom) => {
      *      console.log("double click event...");
      *      context.style({ color: "red" });
      * };
@@ -1180,7 +1180,7 @@ class ModernJS {
      * ***onFocus*** : Sets an event listener for when an element is focused.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onFocus = (e: Event, context: ModernJS) => {
+     * mjs.onFocus = (e: Event, context: VirtualDom) => {
      *      console.log("focus event...");
      *      context.style({ color: "red" });
      * };
@@ -1193,7 +1193,7 @@ class ModernJS {
      * ***onChange*** : Sets an event listener for when an element's input value is changed.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onChange = (e: Event, context: ModernJS) => {
+     * mjs.onChange = (e: Event, context: VirtualDom) => {
      *      console.log("change event...");
      *      context.style({ color: "red" });
      * };
@@ -1206,7 +1206,7 @@ class ModernJS {
      * ***onMouseDown*** : Sets an event listener for when the mouse button is pressed on an element.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onMouseDown = (e: Event, context: ModernJS) => {
+     * mjs.onMouseDown = (e: Event, context: VirtualDom) => {
      *      console.log("mouse down event...");
      *      context.style({ color: "red" });
      * };
@@ -1219,7 +1219,7 @@ class ModernJS {
      * ***onMouseUp*** : Sets an event listener for when a mouse button is released on an element.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onMouseUp = (e: Event, context: ModernJS) => {
+     * mjs.onMouseUp = (e: Event, context: VirtualDom) => {
      *      console.log("mouse up event...");
      *      context.style({ color: "red" });
      * };
@@ -1232,7 +1232,7 @@ class ModernJS {
      * ***onMouseMove*** : Sets an event listener for when the mouse cursor moves within an element.
      * A code sample of TypeScript is shown below.
      * ```typescript
-     * mjs.onMouseMove = (e: Event, context: ModernJS) => {
+     * mjs.onMouseMove = (e: Event, context: VirtualDom) => {
      *      console.log("mouse move event...");
      *      context.style({ color: "red" });
      * };
@@ -1248,7 +1248,7 @@ class ModernJS {
      * mjs.dispatch("click");
      * ```
      * @param {HTMLElementEventMap} eventName dispatch event name
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     dispatch(eventName) {
         this.els.forEach((el) => {
@@ -1427,7 +1427,7 @@ class ModernJS {
      * ```typescript
      * mjs.reset();
      * ```
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     reset() {
         if (this.tagName == "INPUT") {
@@ -1495,7 +1495,7 @@ class ModernJS {
      * mjs.selectEmpty("--- Select ----");
      * ```
      * @param {string} text Selection Text Name
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     selectEmpty(text) {
         const optionEl = document.createElement("option");
@@ -1512,7 +1512,7 @@ class ModernJS {
      * ```typescript
      * mjs.selectResetParam();
      * ```
-     * @returns {ModernJS}
+     * @returns {VirtualDom}
      */
     selectResetParam() {
         this.text = "";
@@ -1552,7 +1552,7 @@ class ModernJS {
         return values;
     }
 }
-exports.ModernJS = ModernJS;
+exports.VirtualDom = VirtualDom;
 /**
  * ***dom*** : Finds an element for the specified query path and returns the virtual DOM class that contains the element.
  * For example, prepare the following HTML:
@@ -1561,12 +1561,12 @@ exports.ModernJS = ModernJS;
  * ```
  * To get the tag with the class attribute item as a virtual DOM, write the following code in TypeScript:
  * ```typescript
- * const subQuery : ModernJS = dom(".item");
+ * const subQuery : VirtualDom = dom(".item");
  * ```
  * @param {string} queryString QueryString
- * @returns {ModernJS}
+ * @returns {VirtualDom}
  */
-exports.dom = ModernJS.dom;
+exports.dom = VirtualDom.dom;
 ;
 return exports;});
 sfa.setFn("Exception", ()=>{var exports = {};
@@ -1667,7 +1667,7 @@ const Data_1 = require("Data");
 const View_1 = require("View");
 const Template_1 = require("Template");
 const UI_1 = require("UI");
-const ModernJS_1 = require("ModernJS");
+const VirtualDom_1 = require("VirtualDom");
 class Response {
     static get routeType() {
         const MyApp = require("app/config/App").MyApp;
@@ -1815,9 +1815,9 @@ class Response {
                 }
             }
             if (MyApp.animationCloseClassName)
-                (0, ModernJS_1.dom)("main").addClass(MyApp.animationCloseClassName);
+                (0, VirtualDom_1.dom)("main").addClass(MyApp.animationCloseClassName);
             if (MyApp.animationOpenClassName)
-                (0, ModernJS_1.dom)("main").removeClass(MyApp.animationOpenClassName);
+                (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationOpenClassName);
             if (MyApp.delay)
                 yield Lib_1.Lib.sleep(MyApp.delay);
             if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
@@ -1933,10 +1933,10 @@ class Response {
             yield Response.__rendering(route, vm);
             const MyApp = require("app/config/App").MyApp;
             if (MyApp.animationCloseClassName)
-                (0, ModernJS_1.dom)("main").removeClass(MyApp.animationCloseClassName);
+                (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationCloseClassName);
             if (MyApp.animationOpenClassName)
-                (0, ModernJS_1.dom)("main").addClass(MyApp.animationOpenClassName);
-            vm.myMjs = (0, ModernJS_1.dom)("main article");
+                (0, VirtualDom_1.dom)("main").addClass(MyApp.animationOpenClassName);
+            vm.myMjs = (0, VirtualDom_1.dom)("main article");
             yield vm.handleRenderBefore();
             // is next page..
             if (Response.isNext) {
@@ -1980,7 +1980,7 @@ class Response {
                 if (beforeTemplate != context.template) {
                     // Template Rendering...
                     Data_1.Data.set("beforeTemplate", context.template);
-                    const template = Template_1.Template.bind((0, ModernJS_1.dom)("body"), context.template);
+                    const template = Template_1.Template.bind((0, VirtualDom_1.dom)("body"), context.template);
                     if (context.handleTemplateChanged)
                         yield context.handleTemplateChanged(template);
                 }
@@ -1990,45 +1990,45 @@ class Response {
             }
             // View Rendering...
             const viewHtml = View_1.View.getHtml("view/" + context.view);
-            if (!(0, ModernJS_1.dom)("main").length)
-                (0, ModernJS_1.dom)("body").append("<main></main>");
-            const main = (0, ModernJS_1.dom)("main");
+            if (!(0, VirtualDom_1.dom)("main").length)
+                (0, VirtualDom_1.dom)("body").append("<main></main>");
+            const main = (0, VirtualDom_1.dom)("main");
             main.html = "<article>" + viewHtml + "</article>";
             context.mjs = main.childs;
             const beforeHead = Data_1.Data.get("beforeHead");
             if (beforeHead != context.head) {
                 Data_1.Data.set("beforeHead", context.head);
                 if (context.head) {
-                    const head = UI_1.UI.bind((0, ModernJS_1.dom)("head"), context.head);
+                    const head = UI_1.UI.bind((0, VirtualDom_1.dom)("head"), context.head);
                     if (context.handleHeadChanged)
                         yield context.handleHeadChanged(head);
                 }
                 else {
-                    (0, ModernJS_1.dom)("head").html = "";
+                    (0, VirtualDom_1.dom)("head").html = "";
                 }
             }
             const beforeHeader = Data_1.Data.get("beforeHeader");
             if (beforeHeader != context.header) {
                 Data_1.Data.set("beforeHeader", context.header);
                 if (context.header) {
-                    const header = UI_1.UI.bind((0, ModernJS_1.dom)("header"), context.header);
+                    const header = UI_1.UI.bind((0, VirtualDom_1.dom)("header"), context.header);
                     if (context.handleHeaderChanged)
                         yield context.handleHeaderChanged(header);
                 }
                 else {
-                    (0, ModernJS_1.dom)("header").html = "";
+                    (0, VirtualDom_1.dom)("header").html = "";
                 }
             }
             const beforeFooter = Data_1.Data.get("beforeFooter");
             if (beforeFooter != context.footer) {
                 Data_1.Data.set("beforeFooter", context.footer);
                 if (context.footer) {
-                    const footer = UI_1.UI.bind((0, ModernJS_1.dom)("footer"), context.footer);
+                    const footer = UI_1.UI.bind((0, VirtualDom_1.dom)("footer"), context.footer);
                     if (context.handleFooterChanged)
                         yield context.handleFooterChanged(footer);
                 }
                 else {
-                    (0, ModernJS_1.dom)("footer").html = "";
+                    (0, VirtualDom_1.dom)("footer").html = "";
                 }
             }
         });
@@ -2220,7 +2220,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Render = void 0;
 const Lib_1 = require("Lib");
 const Shortcode_1 = require("Shortcode");
-const ModernJS_1 = require("ModernJS");
+const VirtualDom_1 = require("VirtualDom");
 class Render {
     /**
      * ***vdo*** : Virtual Dom for content.
@@ -2229,7 +2229,7 @@ class Render {
         return this.myMjs;
     }
     /**
-     * ***vdos*** : Virtual DOM List of ModernJS Classes.
+     * ***vdos*** : Virtual DOM List of VirtualDom Classes.
      * (``mjs`` is also available as a proxy.)
      *
      * Example: First, place a v attribute tag in the HTML file.
@@ -2240,7 +2240,7 @@ class Render {
      * ```typescript
      * this.vdos.mainTitle.text = "MainTitle Text...";
      * ```
-     * [How to use VirtualDOM is described in ModernJS classes.](./ModernJS.ts)
+     * [How to use VirtualDOM is described in VirtualDom classes.](./VirtualDom.ts)
      */
     get vdos() {
         return this.mjs;
@@ -2294,7 +2294,7 @@ class Render {
     }
     /**
      * ***bindUI*** : Bind the Render content to the specified virtual DOM class.
-     * @param {ModernJS} mjs Bind Virtual Dom
+     * @param {VirtualDom} mjs Bind Virtual Dom
      * @param {string} path render Path
      * @param {any} sendData Transmission data contents
      * @param {any} defaultClass Default Response Class Object
@@ -2306,14 +2306,14 @@ class Render {
     }
     /**
      * ***bindUI*** : Appends the Render content to the specified virtual DOM class.
-     * @param {ModernJS} mjs Append Virtual Dom
+     * @param {VirtualDom} mjs Append Virtual Dom
      * @param {string} path render Path
      * @param {any} sendData Transmission data contents
      * @param {any} defaultClass Default Response Class Object
      * @returns {Render | UI | View | Template | Dialog}
      */
     static append(mjs, path, sendData, defaultClass) {
-        const myMjs = new ModernJS_1.ModernJS();
+        const myMjs = new VirtualDom_1.VirtualDom();
         mjs.append(this.getHtml(path), true);
         mjs.reload(myMjs);
         return this.loadClass(myMjs, path, sendData, defaultClass);
@@ -3493,7 +3493,7 @@ class Validation {
     }
     /**
      * ***verifyBind*** : After checking the input data for validity, the error content is automatically bound using the virtual DOM.
-     * @param {ModernJSList} mjs Virtual DOM Class List
+     * @param {VirtualDomList} mjs Virtual DOM Class List
      * @param {any} data input data
      * @returns {ValidateErrorResult}
      */
@@ -3947,7 +3947,7 @@ return exports;});
 sfa.setFn("Core", ()=>{var exports = {};
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.View = exports.ValidateMethod = exports.ValidateErrorResult = exports.ValidateRule = exports.Validation = exports.UI = exports.Template = exports.LocalStorage = exports.SessionStorage = exports.Shortcode = exports.DecisionRouteMode = exports.Routes = exports.Response = exports.Render = exports.dom = exports.ModernJS = exports.SbnDateTime = exports.Lib = exports.KeyEvent = exports.Dialog = exports.Data = exports.Controller = exports.Background = exports.AppRouteType = exports.App = exports.AjaxMethod = exports.Ajax = void 0;
+exports.View = exports.ValidateMethod = exports.ValidateErrorResult = exports.ValidateRule = exports.Validation = exports.UI = exports.Template = exports.LocalStorage = exports.SessionStorage = exports.Shortcode = exports.DecisionRouteMode = exports.Routes = exports.Response = exports.Render = exports.dom = exports.VirtualDom = exports.SbnDateTime = exports.Lib = exports.KeyEvent = exports.Dialog = exports.Data = exports.Controller = exports.Background = exports.AppRouteType = exports.App = exports.AjaxMethod = exports.Ajax = void 0;
 var Ajax_1 = require("Ajax");
 Object.defineProperty(exports, "Ajax", { enumerable: true, get: function () { return Ajax_1.Ajax; } });
 Object.defineProperty(exports, "AjaxMethod", { enumerable: true, get: function () { return Ajax_1.AjaxMethod; } });
@@ -3967,9 +3967,9 @@ Object.defineProperty(exports, "KeyEvent", { enumerable: true, get: function () 
 var Lib_1 = require("Lib");
 Object.defineProperty(exports, "Lib", { enumerable: true, get: function () { return Lib_1.Lib; } });
 Object.defineProperty(exports, "SbnDateTime", { enumerable: true, get: function () { return Lib_1.SbnDateTime; } });
-var ModernJS_1 = require("ModernJS");
-Object.defineProperty(exports, "ModernJS", { enumerable: true, get: function () { return ModernJS_1.ModernJS; } });
-Object.defineProperty(exports, "dom", { enumerable: true, get: function () { return ModernJS_1.dom; } });
+var VirtualDom_1 = require("VirtualDom");
+Object.defineProperty(exports, "VirtualDom", { enumerable: true, get: function () { return VirtualDom_1.VirtualDom; } });
+Object.defineProperty(exports, "dom", { enumerable: true, get: function () { return VirtualDom_1.dom; } });
 var Render_1 = require("Render");
 Object.defineProperty(exports, "Render", { enumerable: true, get: function () { return Render_1.Render; } });
 var Response_1 = require("Response");
@@ -4361,9 +4361,11 @@ const Routes_1 = require("app/config/Routes");
  * Display screen immediately after launching the app.
  */
 class HomeView extends View_1.View {
+    /** handle back  */
     handleBack() {
         console.log("handle Back ... OK");
     }
+    /** handle next */
     handleNext() {
         console.log("handle Next ... OK");
     }

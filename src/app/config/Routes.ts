@@ -16,6 +16,9 @@ export const RURL= {
 
         /** Page1 Type1 */
         Type1: "/page1/type1",
+
+        /** Page1 Type2 */
+        Type2: "/page1/type2",
     },
 
     /** Page2 */
@@ -62,12 +65,16 @@ export const RURL= {
 
     /** arekore (not found page) */
     Arekore: "/arekore",
+
+    /** Select menu */
+    SelectMenu: "/selectMenu",
 };
 
 export const MyRoutes = {
     [RURL.Home]: "home",
     [RURL.Page1.Top]: "page1",
     [RURL.Page1.Type1]: "page1/type1",
+    [RURL.Page1.Type2]: "page1/type2",
     [RURL.Page2.Top]: "page2",
     [RURL.Page2.Detail] : "page2/detail",
     [RURL.Page3]: "page3",
@@ -76,4 +83,5 @@ export const MyRoutes = {
     [RURL.Page5]: "page5",
     [RURL.Page6]: "page6",
     [RURL.Page7]: "page7",
+    [RURL.SelectMenu]: "selectMenu",
 };

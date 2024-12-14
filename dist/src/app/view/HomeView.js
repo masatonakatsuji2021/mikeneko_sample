@@ -20,17 +20,20 @@ const Routes_1 = require("app/config/Routes");
  * Display screen immediately after launching the app.
  */
 class HomeView extends View_1.View {
-    /** handle back  */
-    handleBack() {
-        console.log("handle Back ... OK");
+    handleLeave() {
+        console.log("handle leave ..... OK");
     }
-    /** handle next */
-    handleNext() {
-        console.log("handle Next ... OK");
+    handleLeaveBack() {
+        console.log("handle leave Back ..... OK");
     }
-    handle() {
+    handleLeaveNext() {
+        console.log("handle leave next ..... OK");
+    }
+    handleAlways() {
         this.back = false;
         this.title = "Home";
+    }
+    handle() {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.

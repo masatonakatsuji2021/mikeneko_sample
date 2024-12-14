@@ -10,19 +10,24 @@ import { RURL } from "app/config/Routes";
  */
 export class HomeView extends View {
 
-    /** handle back  */
-    public handleBack() {
-        console.log("handle Back ... OK");
+    public handleLeave() {
+        console.log("handle leave ..... OK");
     }
 
-    /** handle next */
-    public handleNext() {
-        console.log("handle Next ... OK");
+    public handleLeaveBack() {
+        console.log("handle leave Back ..... OK");
+    }
+
+    public handleLeaveNext() {
+        console.log("handle leave next ..... OK");
+    }
+
+    public handleAlways() {
+        this.back = false;
+        this.title = "Home";
     }
 
     public handle() {
-        this.back = false;
-        this.title = "Home";
 
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {

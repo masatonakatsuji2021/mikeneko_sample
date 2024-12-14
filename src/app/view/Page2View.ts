@@ -7,8 +7,11 @@ import { RURL } from "app/config/Routes";
  */
 export class Page2View extends View {
 
+    public handleAlways() {
+        this.title = "Page2";        
+    }
+
     public handle() {
-        this.title = "Page2";
 
         this.vdos.description.text = "Description Text Text Text...";
 

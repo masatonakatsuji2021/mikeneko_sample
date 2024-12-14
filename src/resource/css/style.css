@@ -61,6 +61,7 @@ main article {
     width:100%;
     height:100%;
     overflow:auto;
+    background: var(--main_background);
 }
 header ~ main article {
     top:50px;
@@ -227,13 +228,28 @@ ul.list li {
 ul.list li:first-child{ 
     border-top:solid 1px rgb(180,180,180);
 }
-ul.list li a {
+ul.list li a,
+ul.list li label {
     color:var(--main_color);
     display:block;
     padding:10px;
 }
-ul.list li a:active {
+ul.list li a:active,
+ul.list li label:active {
     background:rgb(80,80,80);
+}
+ul.list li a div,
+ul.list li label div {
+    display:inline-block;
+}
+ul.list li label input[type=radio] {
+    display:none;
+}
+ul.list li label input + div{
+    display:inline-block;
+}
+ul.list li label input:checked + div:before{
+    content:"\2713";
 }
 
 input,
@@ -260,4 +276,13 @@ input:focus-visible {
 }
 img {
     width:100%;
+}
+main {
+    transition-duration:200ms;
+}
+main.open {
+    opacity:1;    
+}
+main.close {
+    opacity:0; 
 }

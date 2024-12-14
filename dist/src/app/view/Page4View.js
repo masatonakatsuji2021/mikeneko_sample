@@ -6,8 +6,10 @@ const Response_1 = require("Response");
 const View_1 = require("app/view/View");
 const Routes_1 = require("app/config/Routes");
 class Page4View extends View_1.View {
-    handle() {
+    handleAlways() {
         this.title = "Page4";
+    }
+    handle() {
         Page4View.stub.forEach((s_) => {
             // loop stub lists
             // append list item.

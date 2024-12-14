@@ -4,8 +4,11 @@ import { AlertDialog } from "app/dialog/AlertDialog";
 
 export class Page5View extends View {
 
-    public handle(){
+    public handleAlways() {
         this.title = "Page5";
+    }
+
+    public handle(){
 
         this.vdos.submit.onClick = () => {
 

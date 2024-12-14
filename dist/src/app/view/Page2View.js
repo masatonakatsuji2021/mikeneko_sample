@@ -8,8 +8,10 @@ const Routes_1 = require("app/config/Routes");
  * Page2 View Class
  */
 class Page2View extends View_1.View {
-    handle() {
+    handleAlways() {
         this.title = "Page2";
+    }
+    handle() {
         this.vdos.description.text = "Description Text Text Text...";
         // item (first)
         const first = this.vdos.item.first;

@@ -14,3 +14,6 @@ MyApp.routeType = App_1.AppRouteType.application;
 // routes
 MyApp.routes = Routes_1.MyRoutes;
 MyApp.notFoundView = "notFound";
+MyApp.delay = 200;
+MyApp.animationOpenClassName = "open";
+MyApp.animationCloseClassName = "close";

@@ -14,6 +14,8 @@ exports.RURL = {
         Top: "/page1",
         /** Page1 Type1 */
         Type1: "/page1/type1",
+        /** Page1 Type2 */
+        Type2: "/page1/type2",
     },
     /** Page2 */
     Page2: {
@@ -47,11 +49,14 @@ exports.RURL = {
     Page7: "/page7",
     /** arekore (not found page) */
     Arekore: "/arekore",
+    /** Select menu */
+    SelectMenu: "/selectMenu",
 };
 exports.MyRoutes = {
     [exports.RURL.Home]: "home",
     [exports.RURL.Page1.Top]: "page1",
     [exports.RURL.Page1.Type1]: "page1/type1",
+    [exports.RURL.Page1.Type2]: "page1/type2",
     [exports.RURL.Page2.Top]: "page2",
     [exports.RURL.Page2.Detail]: "page2/detail",
     [exports.RURL.Page3]: "page3",
@@ -60,4 +65,5 @@ exports.MyRoutes = {
     [exports.RURL.Page5]: "page5",
     [exports.RURL.Page6]: "page6",
     [exports.RURL.Page7]: "page7",
+    [exports.RURL.SelectMenu]: "selectMenu",
 };

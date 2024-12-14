@@ -4,8 +4,10 @@ exports.DetailView = void 0;
 const View_1 = require("app/view/View");
 const Page4View_1 = require("app/view/Page4View");
 class DetailView extends View_1.View {
-    handle(id) {
+    handleAlways(id) {
         this.title = "Page4 (index = " + id + ")";
+    }
+    handle(id) {
         let item;
         Page4View_1.Page4View.stub.forEach((s_) => {
             if (s_.id != id)

@@ -5,8 +5,11 @@ import { RURL } from "app/config/Routes";
 
 export class Page4View extends View {
 
-    public handle() {
+    public handleAlways() {
         this.title = "Page4";
+    }
+
+    public handle() {
 
         Page4View.stub.forEach((s_) => {
             // loop stub lists

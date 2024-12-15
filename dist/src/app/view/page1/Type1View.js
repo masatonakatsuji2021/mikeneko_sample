@@ -14,23 +14,23 @@ const Response_1 = require("Response");
 const Lib_1 = require("Lib");
 const View_1 = require("app/view/View");
 const Routes_1 = require("app/config/Routes");
+const SelectMenuView_1 = require("app/view/SelectMenuView");
 class Type1View extends View_1.View {
-    handleAlways() {
-        this.title = "Page1 (Type1)";
-    }
     handle() {
+        this.title = "Page1 (Type1)";
         this.vdos.throwBtn.onClick = () => {
             throw Error("ERROR TEST!");
         };
+        // SelectMenuBtn on click event handle....
         this.vdos.selectMenuBtn.onClick = () => __awaiter(this, void 0, void 0, function* () {
-            const value = yield Response_1.Response.next(Routes_1.RURL.SelectMenu, this.selectValue);
+            // Open StackMenuView in a stack.
+            // When returning, the return value is returned after the selection.
+            const value = yield SelectMenuView_1.SelectMenuView.stackOpen(this.selectValue);
             this.selectValue = value;
-            if (value == undefined) {
-                this.vdos.selectValue.text = "";
-            }
-            else {
+            this.vdos.selectValue.text = "";
+            if (value != undefined)
                 this.vdos.selectValue.text = "(" + value + ")";
-            }
+            this.title = "Page1 (Type1)";
         });
         // When you press the type2 button
         this.vdos.type2Btn.onClick = () => {
@@ -46,6 +46,7 @@ class Type1View extends View_1.View {
         this.vdos.datetime.text = Lib_1.Lib.datetime().format("YYYY/MM/DD HH:II:SS");
     }
     handleLeave() {
+        console.log("stop timer");
         clearInterval(this.stt);
     }
 }

@@ -5,16 +5,18 @@ export class SelectMenuView extends View {
 
     private radios = [];
 
-    public handle() {
+    public handle(selectValue: number) {
+        this.title = "Select Menu";
 
         const types = {
             0 : "Select0",
             1 : "Select1",
             2 : "Select2",
             3 : "Select3",
+            4 : "Select4",
+            5 : "Select5",
+            6 : "Select6",
         };
-
-        const selected = this.sendData as number;
 
         const c = Object.keys(types);
         for(let n = 0 ; n < c.length ; n++) {
@@ -25,7 +27,7 @@ export class SelectMenuView extends View {
             selectUI.vdos.name.text = name;
             selectUI.vdos.radio.attr("value", value);
 
-            if (selected != undefined && selected == value) {
+            if (selectValue != undefined && selectValue == value) {
                 selectUI.vdos.radio.checked = true;
             }
 
@@ -33,7 +35,7 @@ export class SelectMenuView extends View {
         }
     }
 
-    public handleLeave() {
+    public handleLeaveStackClose() {
 
         let value;
         this.radios.forEach((selectUI)=>{

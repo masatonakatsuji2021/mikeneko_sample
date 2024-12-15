@@ -29,11 +29,9 @@ class HomeView extends View_1.View {
     handleLeaveNext() {
         console.log("handle leave next ..... OK");
     }
-    handleAlways() {
+    handle() {
         this.back = false;
         this.title = "Home";
-    }
-    handle() {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.

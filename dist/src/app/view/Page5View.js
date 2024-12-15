@@ -5,10 +5,8 @@ const View_1 = require("app/view/View");
 const Page5Validation_1 = require("app/validation/Page5Validation");
 const AlertDialog_1 = require("app/dialog/AlertDialog");
 class Page5View extends View_1.View {
-    handleAlways() {
-        this.title = "Page5";
-    }
     handle() {
+        this.title = "Page5";
         this.vdos.submit.onClick = () => {
             const post = {
                 input1: this.vdos.input1.value,

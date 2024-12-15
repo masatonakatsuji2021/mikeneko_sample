@@ -5,15 +5,12 @@ import { Data } from "Data";
 
 export class Type2View extends View {
 
-    public handleAlways(){
-        this.title = "Page1 (Type2)";
-    }
-
     public handle() {
+        this.title = "Page1 (Type2)";
 
         console.log(Data.get("history"));
         this.vdos.resetBtn.onClick = async () => {
-            await Response.back(RURL.Home);
+            Response.back();
         };
     }
 }

@@ -7,9 +7,6 @@ const AlertDialog_1 = require("app/dialog/AlertDialog");
 const ConfirmDialog_1 = require("app/dialog/ConfirmDialog");
 const LoadingDialog_1 = require("app/dialog/LoadingDialog");
 class Page3View extends View_1.View {
-    handleAlways() {
-        this.title = "Page3";
-    }
     handle() {
         this.title = "Page3";
         this.vdos.d1.onClick = () => {

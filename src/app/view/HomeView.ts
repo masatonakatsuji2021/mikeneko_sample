@@ -22,12 +22,9 @@ export class HomeView extends View {
         console.log("handle leave next ..... OK");
     }
 
-    public handleAlways() {
+    public handle() {
         this.back = false;
         this.title = "Home";
-    }
-
-    public handle() {
 
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {

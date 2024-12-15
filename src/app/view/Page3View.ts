@@ -6,10 +6,6 @@ import { LoadingDialog } from "app/dialog/LoadingDialog";
 
 export class Page3View extends View {
     
-    public handleAlways() {
-        this.title = "Page3";        
-    }
-
     public handle() {
         this.title = "Page3";
 

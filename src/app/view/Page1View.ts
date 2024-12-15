@@ -7,14 +7,12 @@ import { RURL } from "app/config/Routes";
  */
 export class Page1View extends View {
 
-    public handleAlways(){
-        this.title = "Page1";
-    }
-    
     public handleLeaveBack() {
         console.log("Page1 Leave Back ... OK");
     }
+
     public handle() {
+        this.title = "Page1";
 
         // When you press the next button
         this.vdos.btn.childs.next.onClick = () => {

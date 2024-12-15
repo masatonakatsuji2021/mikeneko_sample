@@ -4,11 +4,8 @@ import { Page4View } from "app/view/Page4View";
 
 export class DetailView extends View {
 
-    public handleAlways(id: number) {
-        this.title = "Page4 (index = " + id + ")";
-    }
-
     public handle(id: number) {
+        this.title = "Page4 (index = " + id + ")";
 
         let item;
         Page4View.stub.forEach((s_) => {

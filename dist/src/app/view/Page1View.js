@@ -8,13 +8,11 @@ const Routes_1 = require("app/config/Routes");
  * Page1 View Class
  */
 class Page1View extends View_1.View {
-    handleAlways() {
-        this.title = "Page1";
-    }
     handleLeaveBack() {
         console.log("Page1 Leave Back ... OK");
     }
     handle() {
+        this.title = "Page1";
         // When you press the next button
         this.vdos.btn.childs.next.onClick = () => {
             // move to type1

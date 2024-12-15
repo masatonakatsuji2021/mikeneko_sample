@@ -2,32 +2,34 @@ import { Response } from "Response";
 import { Lib } from "Lib";
 import { View } from "app/view/View";
 import { RURL } from "app/config/Routes";
+import { SelectMenuView } from "app/view/SelectMenuView";
 
 export class Type1View extends View {
 
     private stt: NodeJS.Timeout;
 
-    public handleAlways(){
-        this.title = "Page1 (Type1)";
-    }
-
     private selectValue : number;
 
     public handle() {
+        this.title = "Page1 (Type1)";
 
         this.vdos.throwBtn.onClick = () => {
             throw Error("ERROR TEST!");
         };
 
+        // SelectMenuBtn on click event handle....
         this.vdos.selectMenuBtn.onClick = async () => {
-            const value = await Response.next(RURL.SelectMenu, this.selectValue);
+
+            // Open StackMenuView in a stack.
+            // When returning, the return value is returned after the selection.
+            const value = await SelectMenuView.stackOpen(this.selectValue) as number;
+
             this.selectValue = value;
-            if (value == undefined) {
-                this.vdos.selectValue.text = "";
-            }
-            else {
-                this.vdos.selectValue.text = "(" + value + ")";
-            }
+
+            this.vdos.selectValue.text = "";
+            if (value != undefined) this.vdos.selectValue.text = "(" + value + ")";
+
+            this.title = "Page1 (Type1)";
         };
 
         // When you press the type2 button
@@ -35,7 +37,6 @@ export class Type1View extends View {
             // move to Type2
             Response.next(RURL.Page1.Type2);
         };
-
 
         this.setDateTime();
         this.stt = setInterval(()=>{
@@ -48,6 +49,7 @@ export class Type1View extends View {
     }
 
     public handleLeave() {
+        console.log("stop timer");
         clearInterval(this.stt);
     }
 }

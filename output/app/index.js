@@ -360,16 +360,6 @@ class Data {
         const length = this.__data[name].length;
         return this.__data[name][length - 1];
     }
-    static getIndex(name, index) {
-        if (!this.__data[name])
-            return;
-        const length = this.__data[name].length;
-        let targetIndex = length - 1;
-        if (index)
-            targetIndex = targetIndex - index;
-        if (length > 1)
-            return this.__data[name][targetIndex];
-    }
 }
 exports.Data = Data;
 Data.__data = {};
@@ -1683,212 +1673,88 @@ class Response {
         const MyApp = require("app/config/App").MyApp;
         return MyApp.routeType;
     }
-    static back(indexOrSearchURI) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (Response.lock)
-                return false;
-            if (this.isBack)
-                return false;
-            let index;
-            if (indexOrSearchURI) {
-                if (typeof indexOrSearchURI == "string") {
-                    index = 0;
-                    const histories = Data_1.Data.get("history");
-                    for (let n = 0; n < histories.length; n++) {
-                        const h_ = histories[histories.length - (n + 1)];
-                        if (h_.route.url == indexOrSearchURI) {
-                            break;
-                        }
-                        else {
-                            index++;
-                        }
-                    }
-                }
-                else {
-                    index = indexOrSearchURI;
-                }
-            }
-            else {
-                index = 1;
-            }
-            this.isBack = true;
-            yield this.loadLeaveHandle();
-            const MyApp = require("app/config/App").MyApp;
-            if (MyApp.animationCloseClassName)
-                (0, VirtualDom_1.dom)("main").addClass(MyApp.animationCloseClassName);
-            if (MyApp.animationOpenClassName)
-                (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationOpenClassName);
-            if (MyApp.delay)
-                yield Lib_1.Lib.sleep(MyApp.delay);
-            let hdata;
-            for (let n = 0; n < index; n++) {
-                if (this.routeType == App_1.AppRouteType.application) {
-                    Data_1.Data.pop("history");
-                    hdata = Data_1.Data.now("history");
-                    if (hdata) {
-                        if (hdata.drawingRequired) {
-                            yield this.rendering(hdata.route, hdata, hdata.data);
-                        }
-                        else {
-                            (0, VirtualDom_1.dom)("main article:last-child").remove();
-                        }
-                    }
-                }
-                else if (this.routeType == App_1.AppRouteType.web) {
-                    history.back();
-                }
-            }
-            const nowHistory = Data_1.Data.now("history");
-            if (nowHistory.view) {
-                if (nowHistory.route.args) {
-                    yield nowHistory.view.handleAlways(...nowHistory.route.args);
-                }
-                else {
-                    yield nowHistory.view.handleAlways();
-                }
-            }
-            if (MyApp.animationCloseClassName)
-                (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationCloseClassName);
-            if (MyApp.animationOpenClassName)
-                (0, VirtualDom_1.dom)("main").addClass(MyApp.animationOpenClassName);
-            console.log("back url=" + hdata.route.url);
+    static back(index) {
+        if (!index)
+            index = 1;
+        if (Response.lock)
+            return false;
+        if (this.isBack)
+            return false;
+        this.isBack = true;
+        if (Data_1.Data.get("backHandle")) {
+            const backHandle = Data_1.Data.get("backHandle");
+            Data_1.Data.remove("backHandle");
+            backHandle();
             this.isBack = false;
             return true;
-        });
-    }
-    static next(url, data, replaced) {
-        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-            if (Response.lock)
-                return;
+        }
+        let hdata;
+        for (let n = 0; n < index; n++) {
+            if (this.routeType == App_1.AppRouteType.application) {
+                if (Data_1.Data.getLength("history") == 1)
+                    return false;
+                Data_1.Data.pop("history");
+                hdata = Data_1.Data.now("history");
+            }
+            else if (this.routeType == App_1.AppRouteType.web) {
+                history.back();
+            }
+        }
+        if (this.routeType == App_1.AppRouteType.web)
+            return true;
+        const route = Routes_1.Routes.searchRoute(hdata.url.toString());
+        Response.rendering(route, hdata.data).then(() => {
             this.isBack = false;
-            const route = Routes_1.Routes.searchRoute(url.toString());
-            if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
-                this.notFoundView(route);
-                return;
-            }
-            let pageHistory = {
-                route: route,
-                data: data,
-            };
-            if (route.controller) {
-                const res = this.loadController(route, data);
-                pageHistory.controller = res.Controller;
-                pageHistory.view = res.view;
-            }
-            else if (route.view) {
-                pageHistory.view = this.loadView(route, data);
-            }
-            yield this.loadLeaveHandle();
-            pageHistory.callback = resolve;
-            Data_1.Data.push("history", pageHistory);
-            console.log("next url=" + route.url);
-            yield Response.rendering(route, pageHistory, data);
-            if (this.routeType == App_1.AppRouteType.web)
-                location.href = "#" + url;
-            if (replaced) {
-                const get = Data_1.Data.get("history");
-                let after = [];
-                for (let n = 0; n < get.length; n++) {
-                    if (n != get.length - 2) {
-                        after.push(get[n]);
-                    }
-                }
-                console.log(after);
-                Data_1.Data.set("history", after);
-                (0, VirtualDom_1.dom)("main article").last.prev.remove();
-            }
-        }));
+        });
+        return true;
     }
-    static loadController(route, data) {
-        const controllerName = Lib_1.Lib.getModuleName(route.controller + "Controller");
-        const controllerPath = "app/controller/" + Lib_1.Lib.getModulePath(route.controller + "Controller");
-        if (!useExists(controllerPath)) {
-            throw ("\"" + controllerPath + "\" Class is not found.");
-        }
-        const controllerClass = use(controllerPath);
-        const cont = new controllerClass[controllerName]();
-        cont.sendData = data;
-        const viewName = route.action + "View";
-        const viewPath = "app/view/" + route.controller + "/" + Lib_1.Lib.getModulePath(viewName);
-        let vw;
-        if (useExists(viewPath)) {
-            const View_ = use(viewPath);
-            if (!View_[Lib_1.Lib.getModuleName(viewName)]) {
-                console.error("[WARM] \"" + Lib_1.Lib.getModuleName(viewName) + "\"View Class not exists.");
-            }
-            else {
-                vw = new View_[Lib_1.Lib.getModuleName(viewName)]();
-                vw.sendData = data;
-            }
-        }
-        return {
-            Controller: cont,
-            view: vw,
-        };
-    }
-    static loadView(route, data) {
-        const viewName = Lib_1.Lib.getModuleName(route.view + "View");
-        const viewPath = "app/view/" + Lib_1.Lib.getModulePath(route.view + "View");
-        if (!useExists(viewPath)) {
-            throw ("\"" + viewName + "\" Class is not found.");
-        }
-        const View_ = use(viewPath);
-        const vm = new View_[viewName]();
-        vm.sendData = data;
-        return vm;
-    }
-    static notFoundView(route, data) {
-        const MyApp = require("app/config/App").MyApp;
-        if (MyApp.notFoundView) {
-            route.view = MyApp.notFoundView;
-            const errorPageHistory = {
-                route: route,
-                view: this.loadView(route, data),
-            };
-            Data_1.Data.push("history", errorPageHistory);
-            Response.renderingOnView(route, errorPageHistory);
-        }
-        throw Error("Page Not found. \"" + route.url + "\"");
-    }
-    /**
-     * ***historyAdd*** : Add root path to screen transition history.
-     * It will only be added to the history and will not change the screen.
-     * @param {string | number} url route path
-     * @param {any} data send data
-     * @returns {void}
-     */
-    static historyAdd(url, data) {
+    static next(url, data) {
         if (Response.lock)
             return;
         this.isBack = false;
-        const route = Routes_1.Routes.searchRoute(url.toString());
-        if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
-            this.notFoundView(route);
-            return;
-        }
-        let pageHistory = {
-            route: route,
+        const hdata = {
+            url: url,
             data: data,
-            drawingRequired: true,
         };
-        if (route.controller) {
-            const res = this.loadController(route, data);
-            pageHistory.controller = res.Controller;
-            pageHistory.view = res.view;
-        }
-        else if (route.view) {
-            pageHistory.view = this.loadView(route, data);
-        }
-        Data_1.Data.push("history", pageHistory);
+        Data_1.Data.push("history", hdata);
+        const route = Routes_1.Routes.searchRoute(url.toString());
+        Response.rendering(route, data);
+        if (this.routeType == App_1.AppRouteType.web)
+            location.href = "#" + url;
     }
-    static historyAllClear(url) {
-        (0, VirtualDom_1.dom)("main archive").remove();
+    /**
+     * ***addhistory*** : Add root path to screen transition history.
+     * It will only be added to the history and will not change the screen.
+     * @param {string} url route path
+     * @returns {void}
+     */
+    static addHistory(url, data) {
+        if (Response.lock)
+            return;
+        this.isBack = false;
+        const hdata = {
+            url: url,
+            data: data,
+        };
+        Data_1.Data.push("history", hdata);
+    }
+    /**
+     * ***historyClear*** : Clear screen transition history
+     * @returns {void}
+     */
+    static historyClear() {
         Data_1.Data.set("history", []);
-        if (url)
-            this.next(url);
+    }
+    /**
+     * ***pop*** : Go back to the previous screen transition.
+     * @returns {void}
+     */
+    static pop() {
+        Data_1.Data.pop("history");
     }
     static replace(url, send) {
-        this.next(url, send, true);
+        this.pop();
+        this.next(url, send);
     }
     /**
      * ***now*** : Get current route path.
@@ -1903,75 +1769,113 @@ class Response {
     static get isNext() {
         return !this.isBack;
     }
-    static loadLeaveHandle() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const prevHistory = Data_1.Data.now("history");
-            if (prevHistory) {
-                // Controller & View Leave 
-                if (prevHistory.controller) {
-                    const res = yield prevHistory.controller.handleLeave(prevHistory.route.action);
-                    if (prevHistory.callback) {
-                        prevHistory.callback(res);
-                    }
-                    if (this.isBack) {
-                        const res = yield prevHistory.controller.handleLeaveBack(prevHistory.route.action);
-                        if (prevHistory.callback) {
-                            prevHistory.callback(res);
-                        }
-                    }
-                    if (this.isNext) {
-                        const res = yield prevHistory.controller.handleLeaveNext(prevHistory.route.action);
-                        if (prevHistory.callback) {
-                            prevHistory.callback(res);
-                        }
-                    }
-                }
-                if (prevHistory.view) {
-                    const res = yield prevHistory.view.handleLeave();
-                    if (prevHistory.callback) {
-                        prevHistory.callback(res);
-                    }
-                    if (this.isBack) {
-                        const res = yield prevHistory.view.handleLeaveBack();
-                        if (prevHistory.callback) {
-                            prevHistory.callback(res);
-                        }
-                    }
-                    if (this.isNext) {
-                        const res = yield prevHistory.view.handleLeaveNext();
-                        if (prevHistory.callback) {
-                            prevHistory.callback(res);
-                        }
-                    }
-                }
-            }
-        });
+    /**
+     * ***nowView*** : Get the current View class object if there is one.
+     */
+    static get nowView() {
+        if (Data_1.Data.get("beforeView"))
+            return Data_1.Data.get("beforeView");
+    }
+    /**
+     * ***nowController*** : Get the current Controller class object if there is one.
+     */
+    static get nowController() {
+        if (Data_1.Data.get("beforeController"))
+            return Data_1.Data.get("beforeController");
     }
     // rendering....
-    static rendering(route, pageHistory, data) {
+    static rendering(route, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const MyApp = require("app/config/App").MyApp;
+            // Controller & View Leave 
+            const befCont = Data_1.Data.get("beforeController");
+            if (befCont) {
+                const befContAction = Data_1.Data.get("beforeControllerAction");
+                const res = yield befCont.handleLeave(befContAction);
+                if (typeof res == "boolean" && res === false)
+                    return;
+                if (this.isBack) {
+                    const resBack = yield befCont.handleLeaveBack(befContAction);
+                    if (typeof resBack == "boolean" && resBack === false)
+                        return;
+                }
+                if (this.isNext) {
+                    const resNext = yield befCont.handleLeaveNext(befContAction);
+                    if (typeof resNext == "boolean" && resNext === false)
+                        return;
+                }
+            }
+            const befView = Data_1.Data.get("beforeView");
+            if (befView) {
+                const res = yield befView.handleLeave();
+                if (typeof res == "boolean" && res === false)
+                    return;
+                if (this.isBack) {
+                    const resBack = yield befView.handleLeaveBack();
+                    if (typeof resBack == "boolean" && resBack === false)
+                        return;
+                }
+                if (this.isNext) {
+                    const resNext = yield befView.handleLeaveNext();
+                    if (typeof resNext == "boolean" && resNext === false)
+                        return;
+                }
+            }
             if (MyApp.animationCloseClassName)
                 (0, VirtualDom_1.dom)("main").addClass(MyApp.animationCloseClassName);
             if (MyApp.animationOpenClassName)
                 (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationOpenClassName);
             if (MyApp.delay)
                 yield Lib_1.Lib.sleep(MyApp.delay);
+            if (route.mode == Routes_1.DecisionRouteMode.Notfound) {
+                if (MyApp.notFoundView) {
+                    route.view = MyApp.notFoundView;
+                    yield Response.renderingOnView(route, data);
+                }
+                throw ("Page Not found. \"" + route.url + "\"");
+            }
             if (route.controller) {
-                yield Response.renderingOnController(route, pageHistory);
+                yield Response.renderingOnController(route, data);
             }
             else if (route.view) {
-                yield Response.renderingOnView(route, pageHistory);
+                yield Response.renderingOnView(route, data);
             }
         });
     }
-    static renderingOnController(route, pageHistory) {
+    static renderingOnController(route, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const cont = pageHistory.controller;
-            const vw = pageHistory.view;
+            const controllerName = Lib_1.Lib.getModuleName(route.controller + "Controller");
+            const controllerPath = "app/controller/" + Lib_1.Lib.getModulePath(route.controller + "Controller");
+            if (!useExists(controllerPath)) {
+                throw ("\"" + controllerPath + "\" Class is not found.");
+            }
+            const controllerClass = use(controllerPath);
+            const cont = new controllerClass[controllerName]();
+            cont.sendData = data;
+            const viewName = route.action + "View";
+            const viewPath = "app/view/" + route.controller + "/" + Lib_1.Lib.getModulePath(viewName);
+            let vw;
+            if (useExists(viewPath)) {
+                const View_ = use(viewPath);
+                if (!View_[Lib_1.Lib.getModuleName(viewName)]) {
+                    console.error("[WARM] \"" + Lib_1.Lib.getModuleName(viewName) + "\"View Class not exists.");
+                }
+                else {
+                    vw = new View_[Lib_1.Lib.getModuleName(viewName)]();
+                    vw.sendData = data;
+                }
+            }
+            if (Data_1.Data.get("beforeControllerPath") != controllerPath) {
+                Data_1.Data.set("beforeControllerPath", controllerPath);
+                cont.beginStatus = true;
+            }
             yield cont.handleBefore();
             if (vw)
                 yield vw.handleBefore();
+            Data_1.Data.set("beforeController", cont);
+            Data_1.Data.set("beforeControllerAction", route.action);
+            Data_1.Data.set("beforeView", null);
+            Data_1.Data.set("beforeViewPath", null);
             Data_1.Data.set("childClasss", {});
             if (cont["before_" + route.action]) {
                 const method = "before_" + route.action;
@@ -2011,9 +1915,25 @@ class Response {
                 yield vw.handleRenderAfter();
         });
     }
-    static renderingOnView(route, pageHistory) {
+    static renderingOnView(route, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const vm = pageHistory.view;
+            const viewName = Lib_1.Lib.getModuleName(route.view + "View");
+            const viewPath = "app/view/" + Lib_1.Lib.getModulePath(route.view + "View");
+            if (!useExists(viewPath)) {
+                throw ("\"" + viewName + "\" Class is not found.");
+            }
+            const View_ = use(viewPath);
+            const vm = new View_[viewName]();
+            vm.sendData = data;
+            if (Data_1.Data.get("beforeViewPath") != viewPath) {
+                Data_1.Data.set("beforeViewPath", viewPath);
+                if (vm.handleBegin)
+                    yield vm.handleBegin();
+            }
+            Data_1.Data.set("beforeView", vm);
+            Data_1.Data.set("beforeController", null);
+            Data_1.Data.set("beforeControllerPath", null);
+            Data_1.Data.set("beforeControllerAction", null);
             Data_1.Data.set("childClasss", {});
             yield vm.handleBefore();
             yield vm.handleAfter();
@@ -2023,14 +1943,30 @@ class Response {
                 (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationCloseClassName);
             if (MyApp.animationOpenClassName)
                 (0, VirtualDom_1.dom)("main").addClass(MyApp.animationOpenClassName);
-            vm.myMjs = (0, VirtualDom_1.dom)("main article:last-child");
+            vm.myMjs = (0, VirtualDom_1.dom)("main article");
             yield vm.handleRenderBefore();
+            // is next page..
+            if (Response.isNext) {
+                if (route.args) {
+                    yield vm.handleNext(...route.args);
+                }
+                else {
+                    yield vm.handleNext();
+                }
+            }
+            // is back page...
+            if (Response.isBack) {
+                if (route.args) {
+                    yield vm.handleBack(...route.args);
+                }
+                else {
+                    yield vm.handleBack();
+                }
+            }
             if (route.args) {
-                yield vm.handleAlways(...route.args);
                 yield vm.handle(...route.args);
             }
             else {
-                yield vm.handleAlways();
                 yield vm.handle();
             }
             yield vm.handleRenderAfter();
@@ -2064,7 +2000,7 @@ class Response {
             if (!(0, VirtualDom_1.dom)("main").length)
                 (0, VirtualDom_1.dom)("body").append("<main></main>");
             const main = (0, VirtualDom_1.dom)("main");
-            main.append("<article>" + viewHtml + "</article>");
+            main.html = "<article>" + viewHtml + "</article>";
             context.mjs = main.childs;
             const beforeHead = Data_1.Data.get("beforeHead");
             if (beforeHead != context.head) {
@@ -2437,6 +2373,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.string = exports.Startor = void 0;
 const App_1 = require("App");
+const Routes_1 = require("Routes");
 const Render_1 = require("Render");
 const Lib_1 = require("Lib");
 const Data_1 = require("Data");
@@ -2470,7 +2407,6 @@ class Startor {
                 if (location.hash)
                     url = location.hash.substring(1);
             }
-            console.log("beginURL=" + url);
             Response_1.Response.next(url);
         }))();
     }
@@ -2523,7 +2459,10 @@ class Startor {
             let url = location.hash.substring(1);
             if (!url)
                 url = "/";
-            Response_1.Response.next(url);
+            const route = Routes_1.Routes.searchRoute(url);
+            Response_1.Response.rendering(route).then(() => {
+                Response_1.Response.isBack = false;
+            });
         });
     }
     setShortcode() {
@@ -3872,9 +3811,21 @@ exports.ValidateMethod = ValidateMethod;
 return exports;});
 sfa.setFn("View", ()=>{var exports = {};
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.View = void 0;
 const Render_1 = require("Render");
+const VirtualDom_1 = require("VirtualDom");
+const Lib_1 = require("Lib");
+const Data_1 = require("Data");
 /**
  * ***View*** : Main class for each screen.
  */
@@ -3906,6 +3857,47 @@ class View extends Render_1.Render {
             ViewName = "view/" + ViewName;
         return super.append(mjs, ViewName, sendData, this);
     }
+    static stackOpen(...aregments) {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            const view = new this();
+            const MyApp = require("app/config/App").MyApp;
+            if (MyApp.animationCloseClassName)
+                (0, VirtualDom_1.dom)("main").addClass(MyApp.animationCloseClassName);
+            if (MyApp.animationOpenClassName)
+                (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationOpenClassName);
+            if (MyApp.delay)
+                yield Lib_1.Lib.sleep(MyApp.delay);
+            const article = VirtualDom_1.VirtualDom.create(this.getHtml(), "article");
+            const main = (0, VirtualDom_1.dom)("main");
+            main.append(article);
+            view.mjs = main.childs;
+            Data_1.Data.set("backHandle", () => __awaiter(this, void 0, void 0, function* () {
+                if (MyApp.animationCloseClassName)
+                    (0, VirtualDom_1.dom)("main").addClass(MyApp.animationCloseClassName);
+                if (MyApp.animationOpenClassName)
+                    (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationOpenClassName);
+                if (MyApp.delay)
+                    yield Lib_1.Lib.sleep(MyApp.delay);
+                (0, VirtualDom_1.dom)("main article:last-child").remove();
+                if (MyApp.animationCloseClassName)
+                    (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationCloseClassName);
+                if (MyApp.animationOpenClassName)
+                    (0, VirtualDom_1.dom)("main").addClass(MyApp.animationOpenClassName);
+                const output = yield view.handleLeaveStackClose();
+                resolve(output);
+            }));
+            if (MyApp.animationCloseClassName)
+                (0, VirtualDom_1.dom)("main").removeClass(MyApp.animationCloseClassName);
+            if (MyApp.animationOpenClassName)
+                (0, VirtualDom_1.dom)("main").addClass(MyApp.animationOpenClassName);
+            if (aregments) {
+                yield view.handle(...aregments);
+            }
+            else {
+                yield view.handle();
+            }
+        }));
+    }
     /**
      * ***handle*** :
      * A handler that runs automatically when the view is drawn on the screen.
@@ -3913,11 +3905,24 @@ class View extends Render_1.Render {
      */
     handle(...aregment) { }
     /**
-     * ***handle*** :
-     * A handler that runs automatically when the view is drawn on the screen.
-     * This event is executed only when rendered.
+     * handleNext
+     * A handler that runs automatically when the screen is painted after advancing from the previous screen.
      */
-    handleAlways(...aregment) { }
+    handleNext(...aregment) { }
+    /**
+     * handleBack
+     * A handler that runs automatically when painting after returning from the previous screen.
+     */
+    handleBack(...aregment) { }
+    /**
+     * ***handleAlways*** : A handler that runs automatically when the View is displayed on screen.
+     * This event is always executed even if the same View has already been rendered..
+     */
+    handleAlways() { }
+    /**
+     * ***handleBegin*** : A handler executed just before transitioning to the page.
+     */
+    handleBegin() { }
     /**
      * ***handleBefore*** : A handler executed just before transitioning to the page.
      */
@@ -3963,6 +3968,11 @@ class View extends Render_1.Render {
      * ***handleFooterChanged*** : A handler that runs when the template specified in the member variable footer tag changes.
      */
     handleFooterChanged(footer) { }
+    /**
+     * ***handleLeaveStackClose*** : Handler that is executed when the screen is removed after being temporarily displayed foreground using stackOpen
+     * @returns
+     */
+    handleLeaveStackClose() { return; }
 }
 exports.View = View;
 View.type = "View";
@@ -4444,11 +4454,9 @@ class HomeView extends View_1.View {
     handleLeaveNext() {
         console.log("handle leave next ..... OK");
     }
-    handleAlways() {
+    handle() {
         this.back = false;
         this.title = "Home";
-    }
-    handle() {
         // When the page1 button is pressed.
         this.vdos.page1.onClick = () => {
             // next to Page1.
@@ -4545,23 +4553,23 @@ const Response_1 = require("Response");
 const Lib_1 = require("Lib");
 const View_1 = require("app/view/View");
 const Routes_1 = require("app/config/Routes");
+const SelectMenuView_1 = require("app/view/SelectMenuView");
 class Type1View extends View_1.View {
-    handleAlways() {
-        this.title = "Page1 (Type1)";
-    }
     handle() {
+        this.title = "Page1 (Type1)";
         this.vdos.throwBtn.onClick = () => {
             throw Error("ERROR TEST!");
         };
+        // SelectMenuBtn on click event handle....
         this.vdos.selectMenuBtn.onClick = () => __awaiter(this, void 0, void 0, function* () {
-            const value = yield Response_1.Response.next(Routes_1.RURL.SelectMenu, this.selectValue);
+            // Open StackMenuView in a stack.
+            // When returning, the return value is returned after the selection.
+            const value = yield SelectMenuView_1.SelectMenuView.stackOpen(this.selectValue);
             this.selectValue = value;
-            if (value == undefined) {
-                this.vdos.selectValue.text = "";
-            }
-            else {
+            this.vdos.selectValue.text = "";
+            if (value != undefined)
                 this.vdos.selectValue.text = "(" + value + ")";
-            }
+            this.title = "Page1 (Type1)";
         });
         // When you press the type2 button
         this.vdos.type2Btn.onClick = () => {
@@ -4577,6 +4585,7 @@ class Type1View extends View_1.View {
         this.vdos.datetime.text = Lib_1.Lib.datetime().format("YYYY/MM/DD HH:II:SS");
     }
     handleLeave() {
+        console.log("stop timer");
         clearInterval(this.stt);
     }
 }
@@ -4598,16 +4607,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Type2View = void 0;
 const Response_1 = require("Response");
 const View_1 = require("app/view/View");
-const Routes_1 = require("app/config/Routes");
 const Data_1 = require("Data");
 class Type2View extends View_1.View {
-    handleAlways() {
-        this.title = "Page1 (Type2)";
-    }
     handle() {
+        this.title = "Page1 (Type2)";
         console.log(Data_1.Data.get("history"));
         this.vdos.resetBtn.onClick = () => __awaiter(this, void 0, void 0, function* () {
-            yield Response_1.Response.back(Routes_1.RURL.Home);
+            Response_1.Response.back();
         });
     }
 }
@@ -4625,13 +4631,11 @@ const Routes_1 = require("app/config/Routes");
  * Page1 View Class
  */
 class Page1View extends View_1.View {
-    handleAlways() {
-        this.title = "Page1";
-    }
     handleLeaveBack() {
         console.log("Page1 Leave Back ... OK");
     }
     handle() {
+        this.title = "Page1";
         // When you press the next button
         this.vdos.btn.childs.next.onClick = () => {
             // move to type1
@@ -4653,7 +4657,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DetailView = void 0;
 const View_1 = require("app/view/View");
 class DetailView extends View_1.View {
-    handleAlways(id) {
+    handle(id) {
         this.title = "Page2(ID = " + id + ")";
     }
 }
@@ -4671,10 +4675,8 @@ const Routes_1 = require("app/config/Routes");
  * Page2 View Class
  */
 class Page2View extends View_1.View {
-    handleAlways() {
-        this.title = "Page2";
-    }
     handle() {
+        this.title = "Page2";
         this.vdos.description.text = "Description Text Text Text...";
         // item (first)
         const first = this.vdos.item.first;
@@ -4721,9 +4723,6 @@ const AlertDialog_1 = require("app/dialog/AlertDialog");
 const ConfirmDialog_1 = require("app/dialog/ConfirmDialog");
 const LoadingDialog_1 = require("app/dialog/LoadingDialog");
 class Page3View extends View_1.View {
-    handleAlways() {
-        this.title = "Page3";
-    }
     handle() {
         this.title = "Page3";
         this.vdos.d1.onClick = () => {
@@ -4768,10 +4767,8 @@ exports.DetailView = void 0;
 const View_1 = require("app/view/View");
 const Page4View_1 = require("app/view/Page4View");
 class DetailView extends View_1.View {
-    handleAlways(id) {
-        this.title = "Page4 (index = " + id + ")";
-    }
     handle(id) {
+        this.title = "Page4 (index = " + id + ")";
         let item;
         Page4View_1.Page4View.stub.forEach((s_) => {
             if (s_.id != id)
@@ -4795,10 +4792,8 @@ const Response_1 = require("Response");
 const View_1 = require("app/view/View");
 const Routes_1 = require("app/config/Routes");
 class Page4View extends View_1.View {
-    handleAlways() {
-        this.title = "Page4";
-    }
     handle() {
+        this.title = "Page4";
         Page4View.stub.forEach((s_) => {
             // loop stub lists
             // append list item.
@@ -4860,10 +4855,8 @@ const View_1 = require("app/view/View");
 const Page5Validation_1 = require("app/validation/Page5Validation");
 const AlertDialog_1 = require("app/dialog/AlertDialog");
 class Page5View extends View_1.View {
-    handleAlways() {
-        this.title = "Page5";
-    }
     handle() {
+        this.title = "Page5";
         this.vdos.submit.onClick = () => {
             const post = {
                 input1: this.vdos.input1.value,
@@ -4970,14 +4963,17 @@ class SelectMenuView extends View_1.View {
         super(...arguments);
         this.radios = [];
     }
-    handle() {
+    handle(selectValue) {
+        this.title = "Select Menu";
         const types = {
             0: "Select0",
             1: "Select1",
             2: "Select2",
             3: "Select3",
+            4: "Select4",
+            5: "Select5",
+            6: "Select6",
         };
-        const selected = this.sendData;
         const c = Object.keys(types);
         for (let n = 0; n < c.length; n++) {
             const value = Number(c[n]);
@@ -4985,13 +4981,13 @@ class SelectMenuView extends View_1.View {
             const selectUI = SelectUI_1.SelectUI.append(this.vdos.list);
             selectUI.vdos.name.text = name;
             selectUI.vdos.radio.attr("value", value);
-            if (selected != undefined && selected == value) {
+            if (selectValue != undefined && selectValue == value) {
                 selectUI.vdos.radio.checked = true;
             }
             this.radios.push(selectUI);
         }
     }
-    handleLeave() {
+    handleLeaveStackClose() {
         let value;
         this.radios.forEach((selectUI) => {
             if (selectUI.vdos.radio.checked)

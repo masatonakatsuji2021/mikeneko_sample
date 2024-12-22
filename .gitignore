@@ -1,2 +1,5 @@
-index.js
-index.ts
+/index.js
+/index.ts
+/dist
+/output
+package-lock.json

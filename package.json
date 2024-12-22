@@ -1,0 +1,7 @@
+{
+    "name": "mikeneko-build-sample",
+    "version":"1.0.0",
+    "scripts": {
+        "build.android": "node . --platform app && cd output/app && cordova run android"
+    }
+}

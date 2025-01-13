@@ -7,7 +7,6 @@ Mikeneko.build({
             name: "app",
             debug: true,
             mapping: true,
-            buildType: BuildPlatformType.Cordova,
         },
         {
             name: "web",

@@ -1,7 +1,10 @@
 {
-    "name": "mikeneko-build-sample",
+    "name": "mikeneko-sample",
     "version":"1.0.0",
     "scripts": {
         "build.android": "node . --platform app && cd output/app && cordova run android"
+    },
+    "dependencies": {
+        "mikeneko": "^1.1.0"
     }
 }

@@ -1,5 +1,6 @@
 import { Response } from "Response";
 import { View } from "app/view/View";
+import { HeaderUI } from "app/ui/HeaderUI";
 import { RURL } from "app/config/Routes";
 
 /**
@@ -7,23 +8,15 @@ import { RURL } from "app/config/Routes";
  */
 export class Page1View extends View {
 
-    public handleLeaveBack() {
-        console.log("Page1 Leave Back ... OK");
-    }
-
     public handle() {
-        this.title = "Page1";
+        HeaderUI
+            .visible(true)
+            .back(true)
+            .title("Page1")
+        ;
 
-        // When you press the next button
-        this.vdos.btn.childs.next.onClick = () => {
-            // move to type1
-            Response.next(RURL.Page1.Type1);
-        };
-
-        // When you press the replace button
-        this.vdos.btn.childs.replace.onClick = () => {
-            // move to type1 (replace)
-            Response.replace(RURL.Page1.Type1);
+        this.vdos.button.onClick = () => {
+            Response.next(RURL.Page2);
         };
     }
 }

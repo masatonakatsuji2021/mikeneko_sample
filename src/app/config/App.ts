@@ -12,11 +12,15 @@ export class MyApp extends App {
     // routes
     public static routes: Routes = MyRoutes;
 
+    // Not Found View
     public static notFoundView: string = "notFound";
 
-public static delay: number = 200;
+    // Rendring Delay 
+    public static delay: number = 200;
 
-public static animationOpenClassName: string = "open";
+    // Animation Open Class Name
+    public static animationOpenClassName: string = "open";
 
-public static animationCloseClassName: string = "close";
+    // Animation Close Class Name
+    public static animationCloseClassName: string = "close";
 }

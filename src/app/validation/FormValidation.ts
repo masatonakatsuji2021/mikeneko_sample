@@ -1,0 +1,40 @@
+import { ValidateRuleMaps, ValidateRule, Validation } from "Validation";
+
+export class FormValidation extends Validation {
+
+    public rules: ValidateRuleMaps = {
+        name: [
+            {
+                rule: ValidateRule.required,
+                message: "Not entered.",
+            },
+        ],
+        username: [
+            {
+                rule: ValidateRule.required,
+                message: "Not entered.",
+            },
+            {
+                rule: ValidateRule.alphaNumeric,
+                message: "Enter only half-width alphanumeric characters.",
+            },
+            {
+                rule: ValidateRule.lengthMax,
+                args: [ 16 ],
+                message: "Enter 16 under characters.",
+            },
+        ],
+        numberic: [
+            {
+                rule: ValidateRule.numeric,
+                message: "Enter only half-width numbers.",
+            },
+            {
+                rule: ValidateRule.lengthMax,
+                args: [ 16 ],
+                message: "Enter 16 under characters.",
+            },
+        ],
+    };
+
+}

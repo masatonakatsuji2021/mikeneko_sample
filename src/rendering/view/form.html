@@ -1,0 +1,77 @@
+<table class="cells">
+    <tr>
+        <td>
+            <dl class="m">
+                <dt>name</dt>
+                <dd>
+                    <input type="text" v="name">
+                    <div class="error-message" v="error.name"></div>
+                </dd>
+                <dt>username</dt>
+                <dd>
+                    <input type="text" v="username">
+                    <div class="error-message" v="error.username"></div>
+                </dd>
+                <dt>numberic</dt>
+                <dd>
+                    <input type="text" v="numberic">
+                    <div class="error-message" v="error.numberic"></div>
+                </dd>
+                <dt>select type</dt>
+                <dd>
+                    <div class="select">
+                        <select v="stype"></select>
+                        <p></p>
+                    </div>
+                </dd>
+                <dt>checkbox</dt>
+                <dd>
+                    <label class="checkbox">
+                        <input type="checkbox" v="checkbox" value="1">
+                        Checkbox01
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" v="checkbox" value="2">
+                        Checkbox02
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" v="checkbox" value="3">
+                        Checkbox03
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" v="checkbox" value="4">
+                        Checkbox04
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" v="checkbox" value="5">
+                        Checkbox05
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" v="checkbox" value="6">
+                        Checkbox06
+                    </label>
+                </dd>
+            </dl>
+            <ul class="list">
+                <li>
+                    <a v="otherset">
+                        <div>
+                            <div class="ell left10">Setting</div>
+                        </div>
+                        <div class="right" style="width:150px">
+                            <span style="color:gray" v="othersettext">none</span>
+                            <div class="arrow right"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="m">
+                <button class="btn" v="submit">Submit</button>
+            </div>
+        </td>
+    </tr>
+</table>

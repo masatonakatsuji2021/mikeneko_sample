@@ -1,5 +1,4 @@
-/index.js
-/index.ts
 /dist
 /output
 package-lock.json
+/node_modules

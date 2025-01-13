@@ -1,4 +1,3 @@
-import { VirtualDom } from "VirtualDom";
 import { Response } from "Response";
 import { UI } from "UI";
 
@@ -7,34 +6,45 @@ import { UI } from "UI";
  */
 export class HeaderUI extends UI {
 
-    public static title : VirtualDom;
-    public static back : VirtualDom;
+    private static vdo;
+    private static vdos;
 
-    /**
-     * Set the header title
-     */
-    public static set setTitle(title: string) {
-        this.title.text = title;
-    }
-
-    /**
-     * Show/hide back button
-     */
-    public static set setBack(status: boolean) {
-        if (status) {
-            this.back.display = true;
-        }
-        else {
-            this.back.display = false;
-        }
-    }
-    
     public handle() {
-        HeaderUI.title = this.vdos.title;
-        HeaderUI.back = this.vdos.back;
+        this.vdo.addClass("hide");
+        HeaderUI.vdo = this.vdo;
+        HeaderUI.vdos = this.vdos;
 
         this.vdos.back.onClick = () => {
             Response.back();
         };
+    }
+
+    public static visible(status: boolean) : typeof HeaderUI {
+        if (status) {        
+            setTimeout(()=>{
+                this.vdo.removeClass("hide");
+            },10);
+        }
+        else {
+            setTimeout(()=>{
+                this.vdo.addClass("hide");
+            },10);
+        }
+        return HeaderUI;
+    }
+
+    public static back(status: boolean) : typeof HeaderUI {
+        if (status) {
+            this.vdos.back.removeClass("hide");
+        }
+        else {
+            this.vdos.back.addClass("hide");
+        }
+        return HeaderUI;
+    }
+
+    public static title(title: string) : typeof HeaderUI {
+        this.vdos.title.text = title;
+        return HeaderUI;
     }
 }

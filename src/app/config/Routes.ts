@@ -28,6 +28,9 @@ export const RURL= {
 
     /** Dialog page */
     Dialog: "/dialog",
+
+    /** Free Page */
+    freePage: "/freePage",
 };
 
 export const MyRoutes = {
@@ -39,4 +42,5 @@ export const MyRoutes = {
     [RURL.Form]: "form",
     [RURL.FormSelect]: "formSelect",
     [RURL.Dialog]: "dialog",
+    [RURL.freePage]: "freePage",
 };

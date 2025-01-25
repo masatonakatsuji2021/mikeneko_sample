@@ -8,6 +8,11 @@ export class FormValidation extends Validation {
                 rule: ValidateRule.required,
                 message: "Not entered.",
             },
+            {
+                rule: ValidateRule.lengthBetween,
+                args: [ 4, 15 ],
+                message: "The input is not within the range of 4-15 characters.",
+            },
         ],
         username: [
             {

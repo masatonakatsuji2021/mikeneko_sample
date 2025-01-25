@@ -36,6 +36,10 @@ export class HomeView extends View {
 
         this.vdos.dialog.onClick = () => {
             Response.next(RURL.Dialog);
+        };    
+
+        this.vdos.freePage.onClick = () => {
+            Response.next(RURL.freePage);
         };
     }
 }

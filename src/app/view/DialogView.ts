@@ -1,9 +1,9 @@
+import { Dialog, Lib, Response } from "Core";
 import { AlertDialog } from "app/dialog/AlertDialog";
 import { ConfirmDialog } from "app/dialog/ConfirmDialog";
 import { LoadDialog } from "app/dialog/LoadDialog";
 import { HeaderUI } from "app/ui/HeaderUI";
 import { View } from "app/view/View";
-import { Dialog, Lib, Response } from "Core";
 
 export class DialogView extends View {
 

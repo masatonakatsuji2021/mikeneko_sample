@@ -1,7 +1,7 @@
-import { Response } from "Response";
+import { Transition } from "Core";
 import { View } from "app/view/View";
 import { HeaderUI } from "app/ui/HeaderUI";
-import { RURL } from "app/config/Routes";
+import { MyRouteMaps } from "app/config/RouteMaps";
 
 /**
  * Page1 View Class
@@ -16,7 +16,7 @@ export class Page1View extends View {
         ;
 
         this.vdos.button.onClick = () => {
-            Response.next(RURL.Page2);
+            Transition.move(MyRouteMaps.page2);
         };
     }
 }

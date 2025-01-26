@@ -1,9 +1,10 @@
-import { UI, Response, VirtualDom } from "Core";
-import { RURL } from "app/config/Routes";
+import { UI, Transition, VirtualDom } from "Core";
+import { MyRouteMaps } from "app/config/RouteMaps";
+import { Page3DataInterface } from "app/view/page3/Page3Data";
 
 export class ListUI extends UI {
 
-    public static open(vdo: VirtualDom, lists : Array<IListItem>) {
+    public static open(vdo: VirtualDom, lists : Array<Page3DataInterface>) {
                
         for(let n = 0 ; n < lists.length ; n++){
             const l_ = lists[n];
@@ -14,18 +15,10 @@ export class ListUI extends UI {
 
             listUI.vdos.button
                 .onClick = () => {
-                    Response.next(RURL.ListDetail, l_);
+                    Transition.move(MyRouteMaps.page3.detail, [ n ]);
                 }
             ;
         }
     }
 }
 
-export interface IListItem {
-
-    name: string,
-
-    value: number,
-
-    description: string,
-}

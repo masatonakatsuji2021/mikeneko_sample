@@ -2,12 +2,12 @@
 import { HeaderUI } from "app/ui/HeaderUI";
 import { FormValidation } from "app/validation/FormValidation";
 import { View } from "app/view/View";
-import { FormSelectView } from "app/view/FormSelectView";
+import { FormSelectView } from "app/view/form/FormSelectView";
 
 /**
- * Form View Class
+ * FormMain View Class
  */
-export class FormView extends View {
+export class FormMainView extends View {
 
     private otherset;
 

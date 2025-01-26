@@ -1,6 +1,6 @@
-import { Response } from "Response";
+import { Transition } from "Core";
 import { View } from "app/view/View";
-import { RURL } from "app/config/Routes";
+import { MyRouteMaps } from "app/config/RouteMaps";
 import { HeaderUI } from "app/ui/HeaderUI";
 
 /**
@@ -23,23 +23,27 @@ export class HomeView extends View {
         };
 
         this.vdos.page1.onClick = () => {
-            Response.next(RURL.Page1);
+            Transition.move(MyRouteMaps.page1);
         };
 
         this.vdos.list.onClick = () => {
-            Response.next(RURL.List);
+            Transition.move(MyRouteMaps.page3.list);
         };
 
         this.vdos.form.onClick = () => {
-            Response.next(RURL.Form);
+            Transition.move(MyRouteMaps.form.main);
         };
 
         this.vdos.dialog.onClick = () => {
-            Response.next(RURL.Dialog);
+            Transition.move(MyRouteMaps.dialog);
         };    
 
         this.vdos.freePage.onClick = () => {
-            Response.next(RURL.freePage);
+            Transition.move(MyRouteMaps.freePage);
+        };
+
+        this.vdos.fn1.onClick = () => {
+            Transition.move(MyRouteMaps.fn1);
         };
     }
 }

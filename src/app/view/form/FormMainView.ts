@@ -1,8 +1,9 @@
 
+import { Transition } from "Transition";
+import { Maps } from "app/config/Maps";
 import { HeaderUI } from "app/ui/HeaderUI";
 import { FormValidation } from "app/validation/FormValidation";
 import { View } from "app/view/View";
-import { FormSelectView } from "app/view/form/FormSelectView";
 
 /**
  * FormMain View Class
@@ -27,7 +28,7 @@ export class FormMainView extends View {
 
         this.vdos.otherset.onClick = async () => {
 
-            const value = await FormSelectView.stackOpen();
+            const value = await Transition.stack(Maps.form.select);
 
             this.vdos.othersettext.text = value.name;
             this.otherset = value.value;

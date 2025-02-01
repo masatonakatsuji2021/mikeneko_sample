@@ -1,5 +1,5 @@
 import { App, AppRouteType } from "App";
-import { RouteMaps } from "RouteMap";
+import { RouteMap, RouteMaps } from "RouteMap";
 import { Maps } from "app/config/Maps";
 import { RouteType } from "app/config/Config";
 
@@ -11,10 +11,11 @@ export class MyApp extends App {
     // routeType
     public static routeType: AppRouteType = RouteType;
     
+    // route maps
     public static maps : RouteMaps = Maps;
 
     // Not Found View
-    public static notFoundView: string = "notFound";
+    public static notFoundView: RouteMap = Maps.notFound;
 
     // Rendring Delay 
     public static delay: number = 200;

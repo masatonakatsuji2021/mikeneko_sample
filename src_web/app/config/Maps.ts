@@ -41,4 +41,7 @@ export const Maps = {
         console.log({url});
         return RMap("fn1");
     }}),
+
+    /** Not Found Page */
+    notFound: RMap("notFound"),
 };

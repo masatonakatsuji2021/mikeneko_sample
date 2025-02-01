@@ -23,7 +23,7 @@ export class HomeView extends View {
         };
 
         this.vdos.page1.onClick = () => {
-            Transition.move(Maps.page1);
+            Transition.next(Maps.page1);
         };
 
         this.vdos.list.onClick = () => {

@@ -4,9 +4,9 @@
     "module": "commonjs",
     "lib": ["es6","dom"],
     "rootDir": "./",
-    "outDir":"./dist",
+    "outDir": "./dist",
     "paths": {
-      "*": ["./node_modules/mikeneko/bin/*"],
+      "*": ["./node_modules/mikeneko-corelib/bin/*"],
       "app/*" : [ "./src/app/*" ]
     }
   },

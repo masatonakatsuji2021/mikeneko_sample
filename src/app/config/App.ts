@@ -1,6 +1,6 @@
 import { App, AppRouteType } from "App";
 import { RouteMaps } from "RouteMap";
-import { MyRouteMaps } from "app/config/RouteMaps";
+import { Maps } from "app/config/Maps";
 import { RouteType } from "app/config/Config";
 
 /**
@@ -11,7 +11,7 @@ export class MyApp extends App {
     // routeType
     public static routeType: AppRouteType = RouteType;
     
-    public static maps : RouteMaps = MyRouteMaps;
+    public static maps : RouteMaps = Maps;
 
     // Not Found View
     public static notFoundView: string = "notFound";

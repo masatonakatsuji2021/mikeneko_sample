@@ -5,6 +5,7 @@
         "build.android": "node . --platform app && cd output/app && cordova run android"
     },
     "dependencies": {
-        "mikeneko": "^1.1.0"
+        "mikeneko": "^1.1.0",
+        "mikeneko-corelib": "^1.0.0"
     }
 }

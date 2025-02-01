@@ -1,6 +1,6 @@
 import { RMap, RouteMap } from "RouteMap";
 
-export const MyRouteMaps = {
+export const Maps = {
 
     /** Home */
     home: RMap({url: "/", view: "home" }),

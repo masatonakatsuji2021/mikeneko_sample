@@ -1,5 +1,5 @@
 import { UI, Transition, VirtualDom } from "Core";
-import { MyRouteMaps } from "app/config/RouteMaps";
+import { Maps } from "app/config/Maps";
 import { Page3DataInterface } from "app/view/page3/Page3Data";
 
 export class ListUI extends UI {
@@ -15,7 +15,7 @@ export class ListUI extends UI {
 
             listUI.vdos.button
                 .onClick = () => {
-                    Transition.move(MyRouteMaps.page3.detail, [ n ]);
+                    Transition.move(Maps.page3.detail, [ n ]);
                 }
             ;
         }

@@ -1,7 +1,6 @@
 "use strict";
-const { Mikeneko, BuildPlatformType } = require("mikeneko");
-Mikeneko.build({
-//    corelibtsc: true,
+const { Builder } = require("mikeneko-build");
+Builder.build({
     platforms: [
         {
             name: "app",
@@ -11,6 +10,7 @@ Mikeneko.build({
         {
             name: "web",
             debug: true,
+            mapping: true,
         },
         {
             name: "webpack",

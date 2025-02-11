@@ -7,8 +7,31 @@ main article {
     background:#ffffff;
     color:#454545;
     opacity:0;
-    transition-duration:300ms;
     font-size:18px;
+}
+main article.open {
+    animation:articleOpen 200ms linear;
+    opacity:1;
+}
+main article.close {
+    animation:articleClose 200ms linear;
+    opacity:0;
+}
+@keyframes articleOpen {
+    0% {
+        opacity:0;        
+    }
+    100% {
+        opacity:1; 
+    }
+}
+@keyframes articleClose {
+    0% {
+        opacity:1;        
+    }
+    100% {
+        opacity:0; 
+    }
 }
 article img {
     width:100%;
@@ -357,13 +380,6 @@ article ul.list li > * > *.right {
 .ell.left10 {
     left:10px;
     width:calc(100% - 10px);
-}
-
-main.open article {
-    opacity:1;
-}
-main.close article {
-    opacity:0;
 }
 dl dd {
     margin:0;

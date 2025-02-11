@@ -18,7 +18,7 @@ export class MyApp extends App {
     public static notFoundView: RouteMap = Maps.notFound;
 
     // Rendring Delay 
-    public static delay: number = 200;
+    public static delay: number = 300;
 
     // Animation Open Class Name
     public static animationOpenClassName: string = "open";

@@ -3,7 +3,7 @@ import { View } from "app/view/View";
 
 export class FreePageView extends View {
 
-    public contentHtml : string = "<div class=\"m\">Hallo Free Page</div>";
+    public html : string = "<div class=\"m\">Hallo Free Page</div>";
 
     public handle() {
         HeaderUI

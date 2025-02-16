@@ -8,31 +8,93 @@ main article {
     color:#454545;
     opacity:0;
     font-size:18px;
+    border:solid 1px gray;
 }
-main article.open {
-    animation:articleOpen 200ms linear;
+main article.nextOpen {
+    animation:articleNextOpen 200ms alternate;
     opacity:1;
 }
-main article.close {
-    animation:articleClose 200ms linear;
+main article.nextClose {
+    animation:articleNextClose 200ms alternate;
     opacity:0;
 }
-@keyframes articleOpen {
+main article.backOpen {
+    animation:articleBackOpen 200ms alternate;
+    opacity:1;
+}
+main article.backClose {
+    animation:articleBackClose 200ms alternate;
+    opacity:0;
+}
+
+main article.stackOpen {
+    animation:stackOpen 200ms alternate;
+    opacity:1;
+    left:0;
+}
+main article.stackClose {
+    animation:stackClose 200ms alternate;
+    left:100%;
+    opacity:1;
+}
+
+@keyframes articleNextOpen {
     0% {
-        opacity:0;        
+        left:100%;
+        opacity:0;
     }
     100% {
+        left:0;
         opacity:1; 
     }
 }
-@keyframes articleClose {
+@keyframes articleNextClose {
     0% {
+        left:0;
         opacity:1;        
     }
     100% {
+        left:-100%;
         opacity:0; 
     }
 }
+@keyframes articleBackOpen {
+    0% {
+        left:-100%;
+        opacity:0;
+    }
+    100% {
+        left:0;
+        opacity:1; 
+    }
+}
+@keyframes articleBackClose {
+    0% {
+        left:0;
+        opacity:1;
+    }
+    100% {
+        left:100%;
+        opacity:0;
+    }
+}
+@keyframes stackOpen {
+    0% {
+        left:100%;
+    }
+    100% {
+        left:0;
+    }
+}
+@keyframes stackClose {
+    0% {
+        left:0;
+    }
+    100% {
+        left:100%;
+    }
+}
+
 article img {
     width:100%;
 }
@@ -73,6 +135,7 @@ header {
     top:0;
     height:60px;
     transition-duration:300ms;
+    z-index:10;
 }
 header .title {
     font-size:24px;

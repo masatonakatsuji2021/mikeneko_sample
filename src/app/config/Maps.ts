@@ -31,6 +31,9 @@ export const Maps = {
         select: RMap("form/formSelect"),
     },
 
+    /** UITest Page */
+    uitest: RMap("uitest"),
+
     /** Dialog Page */
     dialog: RMap("dialog"),
 

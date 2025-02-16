@@ -1,4 +1,4 @@
-import { Dialog, Lib, Response } from "Core";
+import { Dialog, Lib, Response, Transition } from "Core";
 import { AlertDialog } from "app/dialog/AlertDialog";
 import { ConfirmDialog } from "app/dialog/ConfirmDialog";
 import { LoadDialog } from "app/dialog/LoadDialog";
@@ -19,7 +19,8 @@ export class DialogView extends View {
             const test = Dialog.show("test");
             test.vdos.close.onClick = () => {
                 Response.lock = false;
-                test.close();
+//                test.close();
+                Transition.back();
             }
         };
 
@@ -81,5 +82,23 @@ export class DialogView extends View {
             load.close();
             Response.lock = false;
         };
+
+        this.vdos.d06.onClick = () => {
+            Response.lock = true;
+            const d1 = Dialog.show({
+                html: "<div class=\"m\"><p>Dialog1</p><div style=\"text-align:right\"><a v=\"button\">Next</a></div></div>",
+            });
+            d1.vdos.button.onClick = () => {
+                const d2 = Dialog.show({
+                    html: "<div class=\"m\"><p>Dialog2 ... OK!</p><div style=\"text-align:right\"><a v=\"button\">Close</a></div></div>",
+                });
+                d2.vdos.button.onClick = () => {
+                    d2.close();
+                    d1.close();
+                    Response.lock = false;
+                };
+            };
+        };
+
     }
 }

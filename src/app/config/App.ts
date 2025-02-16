@@ -1,4 +1,4 @@
-import { App, AppRouteType } from "App";
+import { AnimationClassSelector, App, AppRouteType } from "App";
 import { RouteMap, RouteMaps } from "RouteMap";
 import { Maps } from "app/config/Maps";
 import { RouteType } from "app/config/Config";
@@ -20,9 +20,18 @@ export class MyApp extends App {
     // Rendring Delay 
     public static delay: number = 300;
 
-    // Animation Open Class Name
-    public static animationOpenClassName: string = "open";
-
-    // Animation Close Class Name
-    public static animationCloseClassName: string = "close";
+    public static animationClassSelector: AnimationClassSelector = {
+        next: {
+            open: "nextOpen",
+            close: "nextClose",
+        },
+        back: {
+            open: "backOpen",
+            close: "backClose",
+        },
+        stack: {
+            open: "stackOpen",
+            close: "stackClose",
+        },
+    };
 }

@@ -29,7 +29,7 @@ export class FormMainView extends View {
         this.vdos.otherset.onClick = async () => {
 
             const value = await Transition.stack(Maps.form.select);
-
+            if (!value) return;
             this.vdos.othersettext.text = value.name;
             this.otherset = value.value;
         };

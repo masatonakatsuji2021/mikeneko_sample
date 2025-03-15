@@ -11,7 +11,7 @@ import { VirtualDom } from "VirtualDom";
  */
 export class HomeView extends View {
 
-    public vdos : {
+    declare public vdos : {
 
         /** bottom button */
         bottom: VirtualDom,

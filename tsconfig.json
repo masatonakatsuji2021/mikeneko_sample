@@ -8,7 +8,8 @@
     "paths": {
       "*": [
         "./node_modules/mikeneko-corelib/bin/*",
-        "./node_modules/mikeneko-testlibrary/bin/*"
+        "./node_modules/mikeneko-plugin-dialog/bin/*",
+        "./node_modules/mikeneko-plugin-validation/bin/*",
       ],
       "app/*" : [ "./src/app/*" ]
     }

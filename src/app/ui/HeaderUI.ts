@@ -1,4 +1,4 @@
-import { Response } from "Response";
+import { Transition } from "Transition";
 import { UI } from "UI";
 
 /**
@@ -15,7 +15,7 @@ export class HeaderUI extends UI {
         HeaderUI.vdos = this.vdos;
 
         this.vdos.back.onClick = () => {
-            Response.back();
+            Transition.back();
         };
     }
 

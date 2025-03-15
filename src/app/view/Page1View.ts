@@ -1,4 +1,4 @@
-import { Transition } from "Core";
+import { Transition } from "Transition";
 import { View } from "app/view/View";
 import { HeaderUI } from "app/ui/HeaderUI";
 import { Maps } from "app/config/Maps";

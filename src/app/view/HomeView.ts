@@ -1,18 +1,52 @@
-import { Transition } from "Core";
-import { View } from "app/view/View";
-import { Maps } from "app/config/Maps";
-import { HeaderUI } from "app/ui/HeaderUI";
-import { AnimationClassSelector } from "App";
+import { Transition } from "Transition";
+import { View } from "./View";
+import { Maps } from "../config/Maps";
+import { HeaderUI } from "../ui/HeaderUI";
+import { VirtualDom } from "VirtualDom";
 
 /**
- * Home View Class
- * Display screen immediately after launching the app.
+ * ### Home View Class
+ * Display screen immediately after launching the app.  
+ * [renderin HTML](../../rendering/view/home.html)
  */
 export class HomeView extends View {
 
+    public vdos : {
+
+        /** bottom button */
+        bottom: VirtualDom,
+
+        /** bottom up menu */
+        menu : VirtualDom,
+
+        /** close button */
+        close: VirtualDom,
+
+        /** page1 button */
+        page1: VirtualDom,
+
+        /** list button */
+        list: VirtualDom,
+
+        /** form button */
+        form: VirtualDom,
+
+        /** dialog button */
+        dialog: VirtualDom,
+
+        /** uitest button */
+        uitest: VirtualDom,
+
+        /** freePage button */
+        freePage: VirtualDom,
+
+        /** fn1 button */
+        fn1: VirtualDom,
+    };
+
     public handle() {
         this.vdo.addClass("main");
-        
+
         HeaderUI.visible(false);
 
         this.vdos.bottom.onClick = () => {

@@ -1,13 +1,21 @@
-import { Dialog, Lib, Response, Transition } from "Core";
-import { AlertDialog } from "app/dialog/AlertDialog";
-import { ConfirmDialog } from "app/dialog/ConfirmDialog";
-import { LoadDialog } from "app/dialog/LoadDialog";
+import { Dialog } from "Dialog";
+import { AlertDialog } from "AlertDialog";
+import { ConfirmDialog } from "ConfirmDialog";
+import { LoadingDialog } from "LoadingDialog";
+import { Lib } from "Lib";
+import { Transition } from "Transition";
 import { HeaderUI } from "app/ui/HeaderUI";
-import { View } from "app/view/View";
+import { View } from "./View";
+import { BottomupDialog } from "BottomupDialog";
 
+/**
+ * ### DialogView
+ * [renderin HTML](../../rendering/view/dialog.html)
+ */
 export class DialogView extends View {
 
     public handle() {
+
         HeaderUI
             .visible(true)
             .back(true)
@@ -15,33 +23,27 @@ export class DialogView extends View {
         ;
 
         this.vdos.d01.onClick = () => {
-            Response.lock = true;
             const test = Dialog.show("test");
             test.vdos.close.onClick = () => {
-                Response.lock = false;
-//                test.close();
                 Transition.back();
             }
         };
 
         this.vdos.d02.onClick = () => {
-            Response.lock = true;
+            Transition.lock = true;
             AlertDialog.open({
-                message: "Alert Dialog Message....OK",
-                onClose: () => {
-                    Response.lock = false;
-                },
+                message: "Alert Dialog Message....OK\nText Sample Text Sample Text Sample ....",
+                transitionLock: true,
             });
         };
 
         this.vdos.d03.onClick = () => {
-            Response.lock = true;
             AlertDialog.open({
+                transitionLock: true,
                 title: "Alert Dialog Title",
-                message: "Alert Dialog Message....OK",
-                onCloseText: "Exit",
-                onClose: () => {
-                    Response.lock = false;
+                message: "Alert Dialog Message....OK\nText Sample Text Sample Text Sample ....",
+                buttonText: "Exit",
+                onButtonClick: () => {
                     console.log("Alert Dialog Close... OK");
                 },
             });
@@ -49,25 +51,23 @@ export class DialogView extends View {
 
         
         this.vdos.d04.onClick = () => {
-            Response.lock = true;
             ConfirmDialog.open({
+                transitionLock: true,
                 message: "Confirm Dialog ........ OK",
-                onNextText: "OK",
-                onCancelText: "Cancel",
-                onNext: () => {
+                buttonText: "OK",
+                cancelText: "Cancel",
+                onButtonClick: () => {
                     console.log("....OK");
-                    Response.lock = false;
                 },
-                onCancel: () => {
+                onCancelClick: () => {
                     console.log("....Cancel");
-                    Response.lock = false;
                 },
             });
         };
 
         this.vdos.d05.onClick = async () => {
-            Response.lock = true;
-            const load = LoadDialog.open("dialog wait (1/3)");
+            Transition.lock = true;
+            const load = LoadingDialog.open("dialog wait (1/3)");
             
             await Lib.sleep(1000);
 
@@ -80,11 +80,11 @@ export class DialogView extends View {
             await Lib.sleep(1000);
 
             load.close();
-            Response.lock = false;
+            Transition.lock = false;
         };
 
         this.vdos.d06.onClick = () => {
-            Response.lock = true;
+            Transition.lock = true;
             const d1 = Dialog.show({
                 html: "<div class=\"m\"><p>Dialog1</p><div style=\"text-align:right\"><a v=\"button\">Next</a></div></div>",
             });
@@ -95,10 +95,31 @@ export class DialogView extends View {
                 d2.vdos.button.onClick = () => {
                     d2.close();
                     d1.close();
-                    Response.lock = false;
+                    Transition.lock = false;
                 };
             };
         };
 
+        this.vdos.d07.onClick = () => {
+            const dialog = BottomupDialog.open({
+                html: `<div class="m"><div><b>Bottom Up Dialog</b></div>
+<div>Text Sample Text Sample.....</div>
+<div>Text Sample Text Sample.....</div>
+<div>Text Sample Text Sample.....</div>
+<div style="overflow:hidden;zoom:1;"><a v="close" style="float:left">Close</a><a v="button" style="float:right">OK</a></div>
+</div>`,
+            });
+
+            dialog.vdos.close.onClick = () => {
+                console.log("Buttonup dialog .... Close");
+                dialog.close();
+            };
+
+            dialog.vdos.button.onClick = () => {
+                console.log("Buttonup dialog .... OK");
+                dialog.close();
+            };
+
+        };
     }
 }

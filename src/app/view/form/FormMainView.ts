@@ -10,7 +10,9 @@ import { View } from "app/view/View";
  */
 export class FormMainView extends View {
 
-    private otherset;
+    private otherset : number;
+    
+    private othersetText : string;
 
     public handle() {
         HeaderUI
@@ -31,6 +33,7 @@ export class FormMainView extends View {
             const value = await Transition.stack(Maps.form.select);
             if (!value) return;
             this.vdos.othersettext.text = value.name;
+            this.othersetText = value.name;
             this.otherset = value.value;
         };
 
@@ -43,13 +46,12 @@ export class FormMainView extends View {
                 stype: this.vdos.stype.value,
                 checkbox: this.vdos.checkbox.value,
                 otherset: this.otherset,
+                othersetText: this.othersetText,
             };
 
             if (!FormValidation.verifyBind(this.vdos, post).status) return;
 
-            console.log(post);
-
-            alert("Submit OK.");
+            Transition.stack(Maps.form.result, post);
         };
     }
 }

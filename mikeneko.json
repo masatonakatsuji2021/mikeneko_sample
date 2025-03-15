@@ -1,0 +1,26 @@
+{
+    "platforms": [
+        {
+            "name": "app",
+            "debug": true,
+            "mapping": true,
+            "obfuscated": false,
+            "codeCompress": false
+        },
+        {
+            "name": "web",
+            "debug": true,
+            "mapping": true
+        },
+        {
+            "name": "webpack",
+            "build": "webpack",
+            "debug": true,
+            "mapping": true
+        }
+    ],
+    "plugins": [
+        "mikeneko-plugin-dialog",
+        "mikeneko-plugin-validation"
+    ]
+}

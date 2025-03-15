@@ -440,9 +440,9 @@ article ul.list li > * > *.right {
     height:60px;
     line-height:60px;
 }
-.ell.left10 {
-    left:10px;
-    width:calc(100% - 10px);
+.ell.left20 {
+    left:20px;
+    width:calc(100% - 20px);
 }
 dl dd {
     margin:0;

@@ -29,6 +29,9 @@ export const Maps = {
 
         /** Form Select Page */
         select: RMap("form/formSelect"),
+
+        /** Form Result Page */
+        result: RMap("form/formResult"),
     },
 
     /** UITest Page */

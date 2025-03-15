@@ -5,8 +5,9 @@
         "build": "node ."
     },
     "dependencies": {
-        "mikeneko": "^1.1.0",
         "mikeneko-corelib": "^1.0.0",
-        "mikeneko-build": "^1.0.0"
+        "mikeneko-build": "^1.0.0",
+        "mikeneko-plugin-dialog": "^1.0.0",
+        "mikeneko-plugin-validation": "^1.0.0"
     }
 }

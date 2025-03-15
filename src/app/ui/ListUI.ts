@@ -1,4 +1,6 @@
-import { UI, Transition, VirtualDom } from "Core";
+import { UI } from "UI";
+import { Transition } from "Transition";
+import { VirtualDom } from "VirtualDom";
 import { Maps } from "app/config/Maps";
 import { Page3DataInterface } from "app/view/page3/Page3Data";
 

@@ -1,4 +1,5 @@
-import { UI, VirtualDom } from "Core";
+import { UI } from "UI";
+import { VirtualDom } from "VirtualDom";
 
 export class SettingListUI extends UI {
 

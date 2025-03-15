@@ -5,14 +5,14 @@ import { View } from "View";
 export class TestHook extends Hook {
 
     public onStartorBegin(): void {
-        console.log("アプリ起動直後!");
+        console.log("Immediately after launching the app");
     }
 
     public onTransitionNext(target: string | number | RouteMap | typeof View): void {
-        console.log("次画面に移動");
+        console.log("Move to next screen");
     }
 
     public onSetRenderContent(content: string): string | void {
-        return content.split("{abcd}").join("埋め込みテキスト....!");
+        return content.split("{abcd}").join("For embedded testing");
     }
 }

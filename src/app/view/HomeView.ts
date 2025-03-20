@@ -1,6 +1,6 @@
 import { Transition } from "Transition";
 import { View } from "./View";
-import { Maps } from "../config/Maps";
+import { GetMaps } from "RouteMap";
 import { HeaderUI } from "../ui/HeaderUI";
 import { VirtualDom } from "VirtualDom";
 
@@ -59,37 +59,37 @@ export class HomeView extends View {
 
         this.vdos.page1.onClick = () => {
             this.closeMenu();
-            Transition.next(Maps.page1);
+            Transition.next(GetMaps().page1);
         };
 
         this.vdos.list.onClick = () => {
             this.closeMenu();
-            Transition.move(Maps.page3.list);
+            Transition.move(GetMaps().page3.list);
         };
 
         this.vdos.form.onClick = () => {
             this.closeMenu();
-            Transition.move(Maps.form.main);
+            Transition.move(GetMaps().form.main);
         };
 
         this.vdos.dialog.onClick = () => {
             this.closeMenu();
-            Transition.move(Maps.dialog);
+            Transition.move(GetMaps().dialog);
         };
 
         this.vdos.uitest.onClick = () => {
             this.closeMenu();
-            Transition.move(Maps.uitest);
+            Transition.move(GetMaps().uitest);
         };
 
         this.vdos.freePage.onClick = () => {
             this.closeMenu();
-            Transition.move(Maps.freePage);
+            Transition.move(GetMaps().freePage);
         };
 
         this.vdos.fn1.onClick = () => {
             this.closeMenu();
-            Transition.move(Maps.fn1);
+            Transition.move(GetMaps().fn1);
         };
     }
 

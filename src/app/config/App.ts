@@ -1,5 +1,5 @@
 import { AnimationClassSelector, App, AppRouteType } from "App";
-import { RouteMap, RouteMaps } from "RouteMap";
+import { GetMaps, RouteMap, RouteMaps } from "RouteMap";
 import { Maps } from "app/config/Maps";
 import { RouteType } from "app/config/Config";
 
@@ -15,7 +15,7 @@ export class MyApp extends App {
     public static maps : RouteMaps = Maps;
 
     // Not Found View
-    public static notFoundView: RouteMap = Maps.notFound;
+    public static notFoundView = Maps.notFound;
 
     // Rendring Delay 
     public static delay: number = 300;

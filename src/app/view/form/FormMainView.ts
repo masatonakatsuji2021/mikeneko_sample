@@ -1,6 +1,6 @@
 
 import { Transition } from "Transition";
-import { Maps } from "app/config/Maps";
+import { GetMaps } from "RouteMap";
 import { HeaderUI } from "app/ui/HeaderUI";
 import { FormValidation } from "app/validation/FormValidation";
 import { View } from "app/view/View";
@@ -30,7 +30,7 @@ export class FormMainView extends View {
 
         this.vdos.otherset.onClick = async () => {
 
-            const value = await Transition.stack(Maps.form.select);
+            const value = await Transition.stack(GetMaps().form.select);
             if (!value) return;
             this.vdos.othersettext.text = value.name;
             this.othersetText = value.name;
@@ -51,7 +51,7 @@ export class FormMainView extends View {
 
             if (!FormValidation.verifyBind(this.vdos, post).status) return;
 
-            Transition.stack(Maps.form.result, post);
+            Transition.stack(GetMaps().form.result, post);
         };
     }
 }

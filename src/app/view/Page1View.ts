@@ -1,7 +1,7 @@
 import { Transition } from "Transition";
 import { View } from "app/view/View";
 import { HeaderUI } from "app/ui/HeaderUI";
-import { Maps } from "app/config/Maps";
+import { GetMaps } from "RouteMap";
 
 /**
  * Page1 View Class
@@ -16,7 +16,7 @@ export class Page1View extends View {
         ;
 
         this.vdos.button.onClick = () => {
-            Transition.move(Maps.page2);
+            Transition.move(GetMaps().page2);
         };
     }
 }

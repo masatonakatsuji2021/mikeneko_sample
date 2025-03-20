@@ -1,7 +1,7 @@
 import { UI } from "UI";
 import { Transition } from "Transition";
 import { VirtualDom } from "VirtualDom";
-import { Maps } from "app/config/Maps";
+import { GetMaps } from "RouteMap";
 import { Page3DataInterface } from "app/view/page3/Page3Data";
 
 export class ListUI extends UI {
@@ -17,7 +17,7 @@ export class ListUI extends UI {
 
             listUI.vdos.button
                 .onClick = () => {
-                    Transition.move(Maps.page3.detail, [ n ]);
+                    Transition.move(GetMaps().page3.detail, [ n ]);
                 }
             ;
         }
